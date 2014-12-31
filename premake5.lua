@@ -29,9 +29,7 @@ solution "iw4lan"
 		
 		files
 		{
-			"src/**.cpp",
-			"src/**.h",
-			"src/StdInc.cpp"
+			"src/**.cpp", "src/**.h", "src/StdInc.cpp"
 		}
 
 		pchsource "src/StdInc.cpp"
@@ -40,22 +38,8 @@ solution "iw4lan"
 		includedirs { "deps/include/osw/", "deps/include/python/" }
 		
 		libdirs { "deps/lib/" }
-
-		--- links { "rwcore.lib", "rpworld.lib", "rtpng.lib", "rpskin.lib", "rpanisot.lib", "rphanim.lib", "rtanim.lib", "rpuvanim.lib", "rpmatfx.lib", "rtdict.lib", "rtquat.lib", "rtpng.lib", "regal32.lib" }
-		
-		links
-		{
-			"ws2_32.lib",
-			"winmm.lib",
-			"libcurl.lib",
-			"wldap32.lib",
-			"dbghelp.lib",
-			"pdcurses.lib",
-			"shlwapi.lib"
-		}
+	
+		links { "ws2_32.lib", "winmm.lib", "libcurl.lib", "wldap32.lib", "dbghelp.lib", "pdcurses.lib", "shlwapi.lib" }
 
 		configuration "windows"
-			linkoptions "/DYNAMICBASE:NO /SAFESEH:NO /LARGEADDRESSAWARE" 
-
-		postbuildcommands { "copy \"$(TargetPath)\" \"C:\\Documents and Settings\\Administrator\\Desktop\\Games\\Modern Warfare 2\\iw4lan.dll\"" }
-				
+			linkoptions "/DYNAMICBASE:NO /SAFESEH:NO /LARGEADDRESSAWARE"
