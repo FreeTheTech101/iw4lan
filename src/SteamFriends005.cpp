@@ -20,26 +20,7 @@ char* Config_GetUsername();
 
 const char *CSteamFriends005::GetPersonaName()
 {
-#ifdef PRE_RELEASE_DEMOED
-	dvar_t* name = Dvar_FindVar("name");
-	DWORD bufSize = sizeof(g_userName);
-	GetUserName(g_userName, &bufSize);
-
-	if (!g_nameSet)
-	{
-		Dvar_SetCommand("name", g_userName);
-		g_nameSet = true;
-	}
-
-	if (strcmp(name->current.string, g_userName))
-	{
-		return name->current.string;
-	}
-
-	return g_userName;
-#else
 	return Config_GetUsername();
-#endif
 }
 
 void CSteamFriends005::SetPersonaName( const char *pchPersonaName )

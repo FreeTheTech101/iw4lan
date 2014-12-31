@@ -40,14 +40,10 @@
 #undef CreateRemoteThread
 #undef ReadDirectoryChangesW
 
-#if D3D_EXPERIMENTS
-#include <d3d9.h>
-#else
 struct IDirect3DVertexShader9;
 struct IDirect3DPixelShader9;
 struct IDirect3DTexture9;
 struct IDirect3DVertexDeclaration9;
-#endif
 
 // C/C++ headers
 #define _DEBUG 1
