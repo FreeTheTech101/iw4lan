@@ -38,7 +38,7 @@ solution "iw4lan"
 		
 		libdirs { "deps/lib/" }
 	
-		links { "ws2_32.lib", "winmm.lib", "wldap32.lib", "dbghelp.lib", "shlwapi.lib", "libcurl.lib", "pdcurses.lib" }
+		links { "ws2_32.lib", "winmm.lib", "wldap32.lib", "dbghelp.lib", "shlwapi.lib", "libcurl.lib", "pdcurses.lib", "iphlpapi.lib" }
 
 		configuration "windows"
 			linkoptions "/IGNORE:4248 /IGNORE:4049 /IGNORE:4099 /DYNAMICBASE:NO /SAFESEH:NO"
