@@ -529,11 +529,6 @@ DWORD helloHook2Loc = 0x60A946;
 void HelloIW(int type)
 {
 	Com_Printf(type, "%s built on %s %s\n", VERSIONSTRING, __DATE__, __TIME__);
-	Com_Printf(type, "http://triobit.net/\n");
-	Com_Printf(type, "\"Variety is the next big thing for us. We're going in deep, and we're going in hard.\"\n");
-	Com_Printf(type, "  -- Robert Bowling, former Creative Strategist at Infinity Ward (during IW3 credits)\n");
-	//Com_Printf(type, "\"Lead best team in the world in the creation of new gameplay experiences (with dedis ;))\"\n");
-	//Com_Printf(type, "-- Jason West, President of Respawn Entertainment (on the initial biography page, showing his dedication to the community)");
 }
 
 #pragma optimize("", off)
