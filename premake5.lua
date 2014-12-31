@@ -41,4 +41,10 @@ solution "iw4lan"
 		links { "ws2_32.lib", "winmm.lib", "wldap32.lib", "dbghelp.lib", "shlwapi.lib", "libcurl.lib", "pdcurses.lib" }
 
 		configuration "windows"
-			linkoptions "/DYNAMICBASE:NO /SAFESEH:NO"
+			linkoptions "/IGNORE:4248 /IGNORE:4049 /IGNORE:4099 /DYNAMICBASE:NO /SAFESEH:NO"
+
+		local buildHost = os.getenv("COMPUTERNAME") or 'dummy'
+
+		if buildHost == 'win32-pc' then
+			postbuildcommands { "copy \"$(TargetPath)\" \"C:\\Documents and Settings\\Administrator\\Desktop\\Games\\Modern Warfare 2\\iw4lan.dll\"" }
+		end
