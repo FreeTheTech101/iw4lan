@@ -89,10 +89,7 @@ dvar_t* iw4m_password;
 
 dvar_t* sv_mapRotation;
 dvar_t* sv_mapRotationCurrent;
-dvar_t* iw4m_version;
-
-dvar_t* iw4m_remoteKick;
-dvar_t* iw4m_secure;
+dvar_t* iw4lan_version;
 
 dvar_t* com_logFilter;
 
@@ -107,12 +104,9 @@ void InitDedicatedVars() {
 	sv_sayName = (dvar_t*)Dvar_RegisterString("sv_sayName", "^7Console", DVAR_FLAG_NONE, "[IW4] the name to pose as for 'say' commands");
 	sv_mapRotation = (dvar_t*)Dvar_RegisterString("sv_mapRotation", "map_restart", DVAR_FLAG_NONE, "List of maps for the server to play");
 	sv_mapRotationCurrent = (dvar_t*)Dvar_RegisterString("sv_mapRotationCurrent", "", DVAR_FLAG_NONE, "Current map in the map rotation");
-	iw4m_version = (dvar_t*)Dvar_RegisterString("iw4m_version", VERSION, DVAR_FLAG_READONLY, "");
+	iw4lan_version = (dvar_t*)Dvar_RegisterString("iw4lan_version", VERSION, DVAR_FLAG_READONLY, "");
 	com_logFilter = (dvar_t*)Dvar_RegisterBool("com_logFilter", 1, DVAR_FLAG_LATCHED, "Removes ~95% of unneeded lines from the log");
 	sv_online = (dvar_t*)Dvar_RegisterBool("sv_online", 1, DVAR_FLAG_SERVERINFO, "Controls whether the server is online/offline");
-
-	iw4m_secure = (dvar_t*)Dvar_RegisterInt("iw4m_secure", 1, 0, 1, DVAR_FLAG_SERVERINFO, "Enable checking of 'clean' client status");
-	iw4m_remoteKick = (dvar_t*)Dvar_RegisterInt("iw4m_remoteKick", 1, 0, 1, DVAR_FLAG_SERVERINFO, "Allow the master server to kick unclean clients automatically");
 
 	sv_master[0] = Dvar_RegisterString("sv_master1", "", DVAR_FLAG_NONE, "");
 	sv_master[1] = Dvar_RegisterString("sv_master2", "", DVAR_FLAG_NONE, "");
@@ -156,12 +150,14 @@ void InitLogFilter()
 }
 
 #pragma optimize("", off)
-void __declspec(naked) DedicatedInitHookStub() {
+void __declspec(naked) DedicatedInitHookStub()
+{
 	InitDedicatedFastFiles();
 	InitDedicatedVars();
 	InitLogFilter();
 
-	__asm {
+	__asm
+	{
 		jmp dedicatedInitHook.pOriginal
 	}
 }
@@ -655,7 +651,8 @@ void PatchMW2_Dedicated()
 // DEDICATED SAY CODE
 int* maxclients = (int*)0x1A8354C;
 
-void G_SayTo(int mode, void* targetEntity, void* sourceEntity, int unknown, DWORD color, const char* name, const char* text) {
+void G_SayTo(int mode, void* targetEntity, void* sourceEntity, int unknown, DWORD color, const char* name, const char* text)
+{
 	DWORD func = 0x5DF620;
 
 	__asm {
@@ -671,7 +668,8 @@ void G_SayTo(int mode, void* targetEntity, void* sourceEntity, int unknown, DWOR
 	}
 }
 
-void G_SayToClient(int client, DWORD color, const char* name, const char* text) {
+void G_SayToClient(int client, DWORD color, const char* name, const char* text)
+{
 	gentity_t* sourceEntity = &g_entities[0];
 	int unknown = 55;
 	int mode = 0;
@@ -681,7 +679,8 @@ void G_SayToClient(int client, DWORD color, const char* name, const char* text) 
 	G_SayTo(mode, other, sourceEntity, unknown, color, name, text);
 }
 
-void G_SayToAll(DWORD color, const char* name, const char* text) {
+void G_SayToAll(DWORD color, const char* name, const char* text)
+{
 	gentity_t* sourceEntity = &g_entities[0];
 	int unknown = 55;
 	int mode = 0;
@@ -697,7 +696,8 @@ void Cmd_GetStringSV(int start, char* buffer, unsigned int length)
 {
 	*buffer = 0;
 
-	for (int i = start; i < Cmd_ArgcSV(); i++) {
+	for (int i = start; i < Cmd_ArgcSV(); i++)
+	{
 		if (strlen(Cmd_ArgvSV(i)) > 64)
 		{
 			break;
@@ -751,6 +751,7 @@ void SV_ConSayRaw_f()
 	SV_GameSendServerCommand(-1, 0, va("%c \"%s\"", 104, message));
 	Com_Printf(15, "Raw: %s\n", message);
 }
+
 void SV_ConTell_f()
 {
 	if (Cmd_ArgcSV() < 3)
@@ -812,43 +813,9 @@ void SV_ExecuteLastMap()
 	Cmd_ExecuteSingleCommand(0, 0, va("map %s", mapname));
 }
 
-/* extern dvar_t* playlist_enabled;
-
-void Party_ChooseNextPlaylistEntry(int controller)
-{
-	__asm
-	{
-		push controller
-		mov eax, 04573FFh // past the xblive_privatematch check
-		call eax
-		add esp, 4h
-	}
-}
-
-void SV_MapRotateUsingPlaylists()
-{
-	Party_ChooseNextPlaylistEntry(0);
-	
-	dvar_t* ui_gametype = Dvar_FindVar("ui_gametype");
-	dvar_t* ui_mapname = Dvar_FindVar("ui_mapname");
-
-	SetConsole("g_gametype", ui_gametype->current.string);
-	Cmd_ExecuteSingleCommand(0, 0, va("map %s", ui_mapname->current.string));
-}
-
-void Scriptability_RotateMap(); */
-
 void SV_MapRotate_f()
 {
 	Com_Printf(0, "map_rotate...\n\n");
-
-	/* if (playlist_enabled->current.boolean)
-	{
-		Com_Printf(0, "rotating using playlists as playlist_enabled = 1\n");
-		//SV_MapRotateUsingPlaylists();
-		Scriptability_RotateMap();
-		return;
-	} */
 
 	Com_Printf(0, "\"sv_mapRotation\" is: \"%s\"\n\n", sv_mapRotation->current.string);
 	Com_Printf(0, "\"sv_mapRotationCurrent\" is: \"%s\"\n\n", sv_mapRotationCurrent->current.string);
@@ -970,6 +937,7 @@ void Dvar_SetS_f()
 	v->flags |= DVAR_FLAG_SERVERINFO;
 }
 // END SETS COMMAND
+
 extern bool validInt(char* str);
 void SV_Exclamation_f()
 {
@@ -1160,3 +1128,4 @@ void PatchMW2_OneThread()
 	packetEventHook.initialize(packetEventHookLoc, PacketEventHookFunc);
 	packetEventHook.installHook();
 }
+// END SINGLE-THREADED SERVER
