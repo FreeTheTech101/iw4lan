@@ -31,7 +31,7 @@ void Com_SaveDediConfig_Each(dvar_t* dvar, void* userData)
 
 void Com_SaveDediConfig()
 {
-	FILE* f = fopen(va("UserData/%s", configBaseName), "w");
+	FILE* f = fopen(va("zone/%s", configBaseName), "w");
 
 	if (f)
 	{
@@ -112,10 +112,8 @@ void InitializeDediConfig()
 		}
 	}
 
-	//Dvar_RegisterInt("sv_ownerUserID", 0, 0, INT_MAX, DVAR_FLAG_DEDISAVED, "Forum user ID of the server's main administrator.");
-
 	// load the config file, then
-	FILE* f = fopen(va("UserData/%s", configBaseName), "r");
+	FILE* f = fopen(va("zone/%s", configBaseName), "r");
 
 	if (f)
 	{
@@ -143,7 +141,7 @@ void InitializeDediConfig()
 		stripDot[0] = '\0';
 	}
 
-	Dvar_RegisterString("sv_baseConfigName", strippedBaseName, DVAR_FLAG_READONLY, "Server configuration file name.");
+	Dvar_RegisterString("sv_configName", strippedBaseName, DVAR_FLAG_READONLY, "Server configuration file name.");
 
 	// we also patch from here, just because we can
 	//call(0x60B29B, Com_WriteDediConfig, PATCH_JUMP);
