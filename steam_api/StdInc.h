@@ -123,3 +123,24 @@ void G_SayToAll(DWORD color, const char* name, const char* text);
 bool Legacy_IsLegacyMode();
 
 #include <mongoose.h>
+
+struct scriptability_s
+{
+	int notifyNumArgs;
+	VariableValue* notifyStack;
+	const char* notifyType;
+
+	int tempEntRef;
+
+	void* scriptManagerImage;
+
+	bool (__cdecl * cbOnSay)(int client, char* name, char** textptr, int team);
+	void (__cdecl * cbParsePlaylists)(const char* playlistFile);
+	void (__cdecl * cbRotateMap)();
+
+	LPTOP_LEVEL_EXCEPTION_FILTER cbExceptionFilter;
+};
+
+#define BUILDING_EXTDLL
+
+extern scriptability_s* g_scriptability;

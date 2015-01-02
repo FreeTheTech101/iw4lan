@@ -37,7 +37,6 @@ Scr_NotifyLevel_t Scr_NotifyLevel = (Scr_NotifyLevel_t)0x4D9C30;
 SL_ConvertToString_t SL_ConvertToString = (SL_ConvertToString_t)0x4EC1D0;
 SL_GetString_t SL_GetString = (SL_GetString_t)0x4CDC10;
 
-#ifndef BUILDING_EXTDLL
 // custom functions
 typedef struct  
 {
@@ -490,4 +489,3 @@ void PatchMW2_Script()
 		
 	}
 }
-#endif

@@ -123,6 +123,7 @@ void CreateScriptDomain()
 	}
 
 	scriptManagerImage = mono_assembly_get_image(scriptManagerAssembly);
+	g_scriptability->scriptManagerImage = scriptManagerImage;
 
 	bool methodSearchSuccess = true;
 	MonoMethodDesc * description;
@@ -199,7 +200,7 @@ void InitScriptDomain()
 				call eax
 			}
 
-			return;
+			//return;
 		}
 
 		//mono_domain_unload(scriptDomain);
@@ -357,12 +358,15 @@ void ProcessScripts(void* dest, void* source, size_t size)
 	}*/
 }
 
-int tempEntRef = (int)g_entities;//0x18FBB28;
+int tempEntRef = (int)g_entities; //0x18FBB28;
 DWORD storeTempEntRef_Retn = 0x418608;
+
 void __declspec(naked) StoreTempEntRef()
 {
 	__asm mov eax, [esp+4]
 	__asm mov tempEntRef, eax
+
+	g_scriptability->tempEntRef = tempEntRef;
 
 	__asm
 	{
@@ -374,15 +378,15 @@ void __declspec(naked) StoreTempEntRef()
 	__asm jmp storeTempEntRef_Retn
 }
 
-static VariableValue* notifyStack;
-static int notifyNumArgs;
-static const char* notifyType;
+//static VariableValue* notifyStack;
+//static int notifyNumArgs;
+//static const char* notifyType;
 
 void NotifyScript(int entity, unsigned short type, VariableValue* stack)
 {
 	if (!scriptStarted) return;
 
-	notifyStack = stack;
+	g_scriptability->notifyStack = stack;
 
 	const char* string = SL_ConvertToString(type);
 	int numArgs = 0;
@@ -395,8 +399,8 @@ void NotifyScript(int entity, unsigned short type, VariableValue* stack)
 		}
 	}
 
-	notifyNumArgs = numArgs;
-	notifyType = string;
+	g_scriptability->notifyNumArgs = numArgs;
+	g_scriptability->notifyType = string;
 
 	void* args[1];
 	args[0] = &entity;
@@ -473,8 +477,8 @@ short ExecEntThreadHook(int* entity, DWORD funcHandle, int numArgs)
 		funcNum = 5;
 	}
 
-	notifyNumArgs = numArgs;
-	notifyStack = *scr_stack;
+	g_scriptability->notifyNumArgs = numArgs;
+	g_scriptability->notifyStack = *scr_stack;
 
 	void* args[2];
 	args[0] = &entityNum;
@@ -538,7 +542,6 @@ void InitScriptability()
 
 	nop(0x61E69B, 2); // skipping 'bad entities' (ones where no objects are passed?) for notify
 }
-
 bool Scriptability_OnSay(int client, char* name, char** textptr, int team)
 {
 	if (!scriptStarted) return true;
@@ -624,7 +627,7 @@ bool Scriptability_ClientCommand(const char* command, int client)
 // game interface funcs
 MonoString* GI_GetString(int index)
 {
-	char* retval = SL_ConvertToString((notifyStack[-index]).string);
+	char* retval = SL_ConvertToString((g_scriptability->notifyStack[-index]).string);
 	MonoString* cmdStr = GetMonoStringFromMultiByteString(retval);
 	if (cmdStr != NULL)  return cmdStr;
 	else return mono_string_new(scriptDomain, "");
@@ -706,7 +709,7 @@ void GI_PushString(MonoString* string)
 
 MonoString* GI_NotifyType()
 {
-	MonoString* mStr = GetMonoStringFromMultiByteString(notifyType);
+	MonoString* mStr = GetMonoStringFromMultiByteString(g_scriptability->notifyType);
 	if (mStr) return mStr;
 	else return mono_string_new(scriptDomain, "");
 }
@@ -847,6 +850,35 @@ MonoArray* GI_ReadFile(MonoString* filenameStr)
 	FS_FreeFile(buffer);
 
 	return data;
+}
+
+void Scriptability_ParsePlaylists(const char* playlists)
+{
+	if (!scriptStarted)
+	{
+		//mono_domain_unload(scriptDomain);
+		//mono_domain_set(rootDomain, true);
+
+		CreateScriptDomain();
+
+		scriptStarted = true;
+	}
+
+	MonoString* playlistStr = GetMonoStringFromMultiByteString(playlists);
+	if (playlistStr != NULL)
+	{
+		MonoObject* exc = NULL;
+
+		void* args[1];
+		args[0] = playlistStr;
+
+		mono_runtime_invoke(parsePlaylistsMethod, NULL, args, &exc);
+
+		if (exc)
+		{
+			OutputExceptionToDebugger(exc);
+		}
+	}
 }
 
 void Scriptability_RotateMap()

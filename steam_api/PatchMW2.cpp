@@ -133,6 +133,8 @@ void PatchMW2_RecordingSV();
 void PatchMW2_FrameTime();
 void PatchMW2_FrameRate();
 
+void InitScriptability();
+
 void PatchMW2_159()
 {
 	// protocol version (workaround for hacks)
@@ -238,6 +240,8 @@ void PatchMW2_159()
 	PatchMW2_RecordingSV();
 	PatchMW2_FrameTime();
 	//PatchMW2_FrameRate();
+
+	//InitScriptability();
 
 	bool nativeConsole = GAME_FLAG(GAME_FLAG_CONSOLE);
 

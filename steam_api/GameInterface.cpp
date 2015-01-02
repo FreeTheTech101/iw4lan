@@ -8,18 +8,9 @@
 #include <mono/metadata/threads.h>
 #include <mono/metadata/exception.h>
 
-static VariableValue* notifyStack;
-static int notifyNumArgs;
-static const char* notifyType;
-
-extern int tempEntRef;
-
-extern MonoImage* scriptManagerImage;
-
 static VariableValue backupStack[2048];
 static VariableValue backup;
 
-#ifdef COMPILING_IW4M
 static DWORD* scr_retArgs = (DWORD*)0x2040D08;
 static VariableValue** scr_stack = (VariableValue**)0x2040D00;
 
@@ -39,13 +30,12 @@ Scr_AddVector_t Scr_AddVector = (Scr_AddVector_t)0x4D0FA0;
 #define Cmd_AddCommand(a, b, c) Cmd_AddCommand(a, b, c, 0)
 
 #include <unordered_map>
-#endif
 
 //void Scriptability_HandleReturns();
 void Scriptability_HandleReturns()
 {
-	notifyNumArgs = *scr_retArgs;
-	notifyStack = *scr_stack;
+	g_scriptability->notifyNumArgs = *scr_retArgs;
+	g_scriptability->notifyStack = *scr_stack;
 }
 
 extern "C"
@@ -142,7 +132,7 @@ extern "C"
 			// TODO: raise an exception
 			DebugBreak();
 
-			MessageBoxA(NULL, "Script error!", "Oshibka", MB_OK);
+			MessageBoxA(NULL, "Script error!", "IW4M Script Error", MB_OK);
 
 			*(DWORD*)0x1F3E410 -= (8 * numParams);
 			*(DWORD*)0x1F3E414 = 0;
@@ -164,7 +154,7 @@ extern "C"
 		{
 			const char* errMsg = (const char*)0x2045098;
 
-			exc = mono_exception_from_name_msg(scriptManagerImage, "InfinityScript", "ScriptException", errMsg);
+			exc = mono_exception_from_name_msg((MonoImage*)g_scriptability->scriptManagerImage, "InfinityScript", "ScriptException", errMsg);
 		}
 
 		if (exc)
@@ -211,8 +201,7 @@ extern "C"
 			push entType
 			call _setField
 			add esp, 0Ch
-
-			mov eax, 4386E0h // clean up params
+			mov eax, 4386E0h
 			call eax
 		}
 
@@ -336,7 +325,6 @@ extern "C" __declspec(dllexport) int GI_ToEntRef(int obj)
 	__asm
 	{
 		push entRef
-
 		mov eax, 4B03F0h
 		call eax
 		add esp, 4h
@@ -348,19 +336,19 @@ extern "C" __declspec(dllexport) int GI_ToEntRef(int obj)
 
 extern "C" __declspec(dllexport) int GI_GetEntRef(int index)
 {
-	int entRef = (notifyStack[-index]).integer;
+	int entRef = (g_scriptability->notifyStack[-index]).integer;
 
 	return GI_ToEntRef(entRef);
 }
 
 extern "C" __declspec(dllexport) int GI_GetType(int index)
 {
-	return (notifyStack[-index]).type;
+	return (g_scriptability->notifyStack[-index]).type;
 }
 
 extern "C" __declspec(dllexport) int GI_NotifyNumArgs()
 {
-	return notifyNumArgs;
+	return g_scriptability->notifyNumArgs;
 }
 
 extern "C" __declspec(dllexport) int GI_Cmd_Argc()
@@ -394,30 +382,30 @@ extern "C" __declspec(dllexport) void GI_Cmd_EndTokenizedString()
 
 extern "C" __declspec(dllexport) int GI_GetTempEntRef()
 {
-	if (tempEntRef == (DWORD)g_entities) return 0;
-	return (tempEntRef - (DWORD)g_entities) / 628;
+	if (g_scriptability->tempEntRef == (DWORD)g_entities) return 0;
+	return (g_scriptability->tempEntRef - (DWORD)g_entities) / 628;
 }
 
 
 extern "C" __declspec(dllexport) void GI_GetVector(int index, float* vector)
 {
-	memcpy(vector, (notifyStack[-index]).vector, sizeof(float) * 3);
+	memcpy(vector, (g_scriptability->notifyStack[-index]).vector, sizeof(float) * 3);
 }
 
 extern "C" __declspec(dllexport) int GI_GetInt(int index)
 {
-	return (notifyStack[-index]).integer;
+	return (g_scriptability->notifyStack[-index]).integer;
 }
 
 extern "C" __declspec(dllexport) float GI_GetFloat(int index)
 {
-	return (notifyStack[-index]).number;
+	return (g_scriptability->notifyStack[-index]).number;
 }
 
 extern "C" __declspec(dllexport) void GI_CleanReturnStack()
 {
 	DWORD oldNumParam = *scr_numParam;
-	*scr_numParam = notifyNumArgs;
+	*scr_numParam = g_scriptability->notifyNumArgs;
 
 	__asm
 	{

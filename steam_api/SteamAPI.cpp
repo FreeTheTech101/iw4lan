@@ -79,6 +79,29 @@ void SteamProxy_Init();
 void InitializeDediConfig();
 void Com_SaveDediConfig();
 
+scriptability_s* g_scriptability;
+
+bool Scriptability_OnSay(int client, char* name, char** textptr, int team);
+void Scriptability_HandleWebRequest(mg_connection* conn, const mg_request_info* request_info);
+void Scriptability_ParsePlaylists(const char* playlists);
+void Scriptability_RotateMap();
+
+scriptability_s* GetScriptability()
+{
+    if (!g_scriptability)
+    {
+        g_scriptability = new scriptability_s;
+        memset(g_scriptability, 0, sizeof(*g_scriptability));
+
+        g_scriptability->tempEntRef = (int)g_entities;
+        g_scriptability->cbOnSay = Scriptability_OnSay;
+        g_scriptability->cbParsePlaylists = Scriptability_ParsePlaylists;
+        g_scriptability->cbRotateMap = Scriptability_RotateMap;
+    }
+
+    return g_scriptability;
+}
+
 void InitScriptability();
 
 // Steam API code
@@ -118,6 +141,8 @@ extern "C"
 #endif
 
 		InitializeDediConfig();
+
+        GetScriptability();
 
         InitScriptability();
 
