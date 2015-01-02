@@ -76,9 +76,6 @@ HANDLE WINAPI HideCode_DoCreateFile(LPCSTR lpFileName, DWORD dwDesiredAccess, DW
 
 void SteamProxy_Init();
 
-void InitializeDediConfig();
-void Com_SaveDediConfig();
-
 scriptability_s* g_scriptability;
 
 scriptability_s* GetScriptability()
@@ -131,8 +128,6 @@ extern "C"
 #ifdef PRE_RELEASE_DEMO
 		//DisableOldVersions();
 #endif
-
-		InitializeDediConfig();
 
         GetScriptability();
         InitScriptability();
