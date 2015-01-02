@@ -137,6 +137,9 @@ void InitScriptability();
 
 void PatchMW2_159()
 {
+	// un-neuter Com_ParseCommandLine to allow non-connect_lobby
+	*(BYTE*)0x464AE4 = 0xEB;
+
 	// protocol version (workaround for hacks)
 	*(int*)0x4FB501 = PROTOCOL; // was 8E
 
