@@ -76,21 +76,6 @@ HANDLE WINAPI HideCode_DoCreateFile(LPCSTR lpFileName, DWORD dwDesiredAccess, DW
 
 void SteamProxy_Init();
 
-scriptability_s* g_scriptability;
-
-scriptability_s* GetScriptability()
-{
-    if (!g_scriptability)
-    {
-        g_scriptability = new scriptability_s;
-        memset(g_scriptability, 0, sizeof(*g_scriptability));
-
-        g_scriptability->tempEntRef = (int)g_entities;
-    }
-
-    return g_scriptability;
-}
-
 void InitScriptability();
 
 // Steam API code
@@ -129,7 +114,6 @@ extern "C"
 		//DisableOldVersions();
 #endif
 
-        GetScriptability();
         InitScriptability();
 
 		SteamProxy_Init();

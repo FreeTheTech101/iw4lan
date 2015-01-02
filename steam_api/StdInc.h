@@ -123,18 +123,3 @@ void G_SayToAll(DWORD color, const char* name, const char* text);
 bool Legacy_IsLegacyMode();
 
 #include <mongoose.h>
-
-struct scriptability_s
-{
-	int notifyNumArgs;
-	VariableValue* notifyStack;
-	const char* notifyType;
-
-	int tempEntRef;
-
-	void* scriptManagerImage;
-};
-
-#define BUILDING_EXTDLL
-
-extern scriptability_s* g_scriptability;

@@ -77,6 +77,7 @@ MonoString* GetMonoStringFromMultiByteString(const char* mbStr)
 
 	return retval;
 }
+
 char* GetMultiByteStringFromMonoString(MonoString* mStr)
 {
 	if (mono_string_length(mStr) > BUFFER_SIZE) return NULL;
@@ -98,15 +99,9 @@ char* GetMultiByteStringFromMonoString(MonoString* mStr)
 	return retval;
 }
 
-static DWORD tlsConnection;
-static DWORD tlsReqInfo;
-
 void CreateScriptDomain()
 {
 	Mono_EnsureInit();
-
-	tlsConnection = TlsAlloc();
-	tlsReqInfo = TlsAlloc();
 
 	//scriptDomain = mono_domain_create();
 	scriptDomain = mono_domain_create_appdomain("InfinityScript", NULL);
@@ -120,7 +115,6 @@ void CreateScriptDomain()
 	}
 
 	scriptManagerImage = mono_assembly_get_image(scriptManagerAssembly);
-	g_scriptability->scriptManagerImage = scriptManagerImage;
 
 	bool methodSearchSuccess = true;
 	MonoMethodDesc * description;
@@ -349,15 +343,13 @@ void ProcessScripts(void* dest, void* source, size_t size)
 	}*/
 }
 
-int tempEntRef = (int)g_entities; //0x18FBB28;
+int tempEntRef = (int)g_entities; // 0x18FBB28;
 DWORD storeTempEntRef_Retn = 0x418608;
 
 void __declspec(naked) StoreTempEntRef()
 {
 	__asm mov eax, [esp+4]
 	__asm mov tempEntRef, eax
-
-	g_scriptability->tempEntRef = tempEntRef;
 
 	__asm
 	{
@@ -373,11 +365,15 @@ void __declspec(naked) StoreTempEntRef()
 //static int notifyNumArgs;
 //static const char* notifyType;
 
+int notifyNumArgs;
+VariableValue* notifyStack;
+const char* notifyType;
+
 void NotifyScript(int entity, unsigned short type, VariableValue* stack)
 {
 	if (!scriptStarted) return;
 
-	g_scriptability->notifyStack = stack;
+	notifyStack = stack;
 
 	const char* string = SL_ConvertToString(type);
 	int numArgs = 0;
@@ -390,8 +386,8 @@ void NotifyScript(int entity, unsigned short type, VariableValue* stack)
 		}
 	}
 
-	g_scriptability->notifyNumArgs = numArgs;
-	g_scriptability->notifyType = string;
+	notifyNumArgs = numArgs;
+	notifyType = string;
 
 	void* args[1];
 	args[0] = &entity;
@@ -468,8 +464,8 @@ short ExecEntThreadHook(int* entity, DWORD funcHandle, int numArgs)
 		funcNum = 5;
 	}
 
-	g_scriptability->notifyNumArgs = numArgs;
-	g_scriptability->notifyStack = *scr_stack;
+	notifyNumArgs = numArgs;
+	notifyStack = *scr_stack;
 
 	void* args[2];
 	args[0] = &entityNum;
@@ -533,6 +529,7 @@ void InitScriptability()
 
 	nop(0x61E69B, 2); // skipping 'bad entities' (ones where no objects are passed?) for notify
 }
+
 bool Scriptability_OnSay(int client, char* name, char** textptr, int team)
 {
 	if (!scriptStarted) return true;
@@ -618,7 +615,7 @@ bool Scriptability_ClientCommand(const char* command, int client)
 // game interface funcs
 MonoString* GI_GetString(int index)
 {
-	char* retval = SL_ConvertToString((g_scriptability->notifyStack[-index]).string);
+	char* retval = SL_ConvertToString((notifyStack[-index]).string);
 	MonoString* cmdStr = GetMonoStringFromMultiByteString(retval);
 	if (cmdStr != NULL)  return cmdStr;
 	else return mono_string_new(scriptDomain, "");
@@ -700,7 +697,7 @@ void GI_PushString(MonoString* string)
 
 MonoString* GI_NotifyType()
 {
-	MonoString* mStr = GetMonoStringFromMultiByteString(g_scriptability->notifyType);
+	MonoString* mStr = GetMonoStringFromMultiByteString(notifyType);
 	if (mStr) return mStr;
 	else return mono_string_new(scriptDomain, "");
 }

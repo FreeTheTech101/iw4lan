@@ -31,11 +31,19 @@ Scr_AddVector_t Scr_AddVector = (Scr_AddVector_t)0x4D0FA0;
 
 #include <unordered_map>
 
+extern int notifyNumArgs;
+extern VariableValue* notifyStack;
+extern const char* notifyType;
+
+extern int tempEntRef;
+
+extern MonoImage* scriptManagerImage;
+
 //void Scriptability_HandleReturns();
 void Scriptability_HandleReturns()
 {
-	g_scriptability->notifyNumArgs = *scr_retArgs;
-	g_scriptability->notifyStack = *scr_stack;
+	notifyNumArgs = *scr_retArgs;
+	notifyStack = *scr_stack;
 }
 
 extern "C"
@@ -154,7 +162,7 @@ extern "C"
 		{
 			const char* errMsg = (const char*)0x2045098;
 
-			exc = mono_exception_from_name_msg((MonoImage*)g_scriptability->scriptManagerImage, "InfinityScript", "ScriptException", errMsg);
+			exc = mono_exception_from_name_msg(scriptManagerImage, "InfinityScript", "ScriptException", errMsg);
 		}
 
 		if (exc)
@@ -283,19 +291,19 @@ extern "C" __declspec(dllexport) int GI_ToEntRef(int obj)
 
 extern "C" __declspec(dllexport) int GI_GetEntRef(int index)
 {
-	int entRef = (g_scriptability->notifyStack[-index]).integer;
+	int entRef = (notifyStack[-index]).integer;
 
 	return GI_ToEntRef(entRef);
 }
 
 extern "C" __declspec(dllexport) int GI_GetType(int index)
 {
-	return (g_scriptability->notifyStack[-index]).type;
+	return (notifyStack[-index]).type;
 }
 
 extern "C" __declspec(dllexport) int GI_NotifyNumArgs()
 {
-	return g_scriptability->notifyNumArgs;
+	return notifyNumArgs;
 }
 
 extern "C" __declspec(dllexport) int GI_Cmd_Argc()
@@ -329,30 +337,30 @@ extern "C" __declspec(dllexport) void GI_Cmd_EndTokenizedString()
 
 extern "C" __declspec(dllexport) int GI_GetTempEntRef()
 {
-	if (g_scriptability->tempEntRef == (DWORD)g_entities) return 0;
-	return (g_scriptability->tempEntRef - (DWORD)g_entities) / 628;
+	if (tempEntRef == (DWORD)g_entities) return 0;
+	return (tempEntRef - (DWORD)g_entities) / 628;
 }
 
 
 extern "C" __declspec(dllexport) void GI_GetVector(int index, float* vector)
 {
-	memcpy(vector, (g_scriptability->notifyStack[-index]).vector, sizeof(float) * 3);
+	memcpy(vector, (notifyStack[-index]).vector, sizeof(float) * 3);
 }
 
 extern "C" __declspec(dllexport) int GI_GetInt(int index)
 {
-	return (g_scriptability->notifyStack[-index]).integer;
+	return (notifyStack[-index]).integer;
 }
 
 extern "C" __declspec(dllexport) float GI_GetFloat(int index)
 {
-	return (g_scriptability->notifyStack[-index]).number;
+	return (notifyStack[-index]).number;
 }
 
 extern "C" __declspec(dllexport) void GI_CleanReturnStack()
 {
 	DWORD oldNumParam = *scr_numParam;
-	*scr_numParam = g_scriptability->notifyNumArgs;
+	*scr_numParam = notifyNumArgs;
 
 	__asm
 	{
