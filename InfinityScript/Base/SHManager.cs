@@ -49,9 +49,6 @@ namespace InfinityScript
                 Log.Write(LogLevel.Critical, ex.ToString());
                 Environment.Exit(0);
             }
-
-            //GameInterface.TempFunc();
-            //Environment.Exit(0);
         }
 
         public static void RunFrame()
@@ -67,9 +64,6 @@ namespace InfinityScript
                 Log.Write(LogLevel.Critical, ex.ToString());
                 Environment.Exit(0);
             }
-            //GameInterface.Script_PushString("Hello!");
-            //GameInterface.Script_PushInt(1337);
-            //GameInterface.Script_Call(362, 0, 1);
         }
 
         public static void Shutdown()
@@ -88,6 +82,7 @@ namespace InfinityScript
             var eatgame = false;
             var eatscript = false;
             var messageTemp = message;
+            
             ScriptProcessor.RunAll(script =>
             {
                 
@@ -167,8 +162,6 @@ namespace InfinityScript
             if (type != "touch")
             {
                 // dispatch the thingy
-                // IW4M CHANGE
-                //if (GameInterface.Script_GetObjectType(entity) == 21) // actual entity
                 if (GameInterface.Script_GetObjectType(entity) == 22) // actual entity
                 {
                     var entRef = GameInterface.Script_ToEntRef(entity);
@@ -176,7 +169,6 @@ namespace InfinityScript
 
                     entObj.HandleNotify(entity, type, paras);
                 }
-                //else if(GameInterface.Script_GetObjectType(entity) == 24) // not an actual entity
                 else if (GameInterface.Script_GetObjectType(entity) == 21) // not an actual entity
                 {
                     var entRef = GameInterface.Script_GetTempEntRef();
@@ -199,6 +191,7 @@ namespace InfinityScript
             }
 
             var eat = false;
+
             ScriptProcessor.RunAll(script =>
             {
                 var success = script.ProcessServerCommand(commandName.ToLowerInvariant(), args);
@@ -207,6 +200,7 @@ namespace InfinityScript
                     eat = true;
                 }
             });
+
             return eat;
         }
 
