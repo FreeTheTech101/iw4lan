@@ -76,8 +76,6 @@ HANDLE WINAPI HideCode_DoCreateFile(LPCSTR lpFileName, DWORD dwDesiredAccess, DW
 
 void SteamProxy_Init();
 
-void InitScriptability();
-
 // Steam API code
 extern "C"
 {
@@ -113,8 +111,6 @@ extern "C"
 #ifdef PRE_RELEASE_DEMO
 		//DisableOldVersions();
 #endif
-
-        InitScriptability();
 
 		SteamProxy_Init();
 

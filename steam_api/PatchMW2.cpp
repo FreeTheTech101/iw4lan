@@ -244,7 +244,7 @@ void PatchMW2_159()
 	PatchMW2_FrameTime();
 	//PatchMW2_FrameRate();
 
-	//InitScriptability();
+	InitScriptability();
 
 	bool nativeConsole = GAME_FLAG(GAME_FLAG_CONSOLE);
 
