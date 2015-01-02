@@ -126,22 +126,11 @@ namespace InfinityScript
         [DllImport("iw4lan.dll", EntryPoint = "GI_GetTempEntRef")]
         public static extern int Script_GetTempEntRef();
 
-        // reads a file from the Quake FS
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public static extern byte[] ReadFile(string filename);
-
-        // stuff for admin
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public static extern string GetHTTPHeader(int num);
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public static extern byte[] ReadHTTPBody(int length);
-
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public static extern string GetDvar(string dvarName, string defaultValue);
 
-        // do not use
-        [DllImport("iw4lan.dll", EntryPoint = "GI_TempFunc")]
-        public static extern void TempFunc();
+        // reads a file from the Quake FS
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public static extern byte[] ReadFile(string filename);
     }
 }

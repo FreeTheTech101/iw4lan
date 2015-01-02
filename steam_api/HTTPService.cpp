@@ -54,9 +54,6 @@ void HTTPService_HandleDownloadRequest(mg_connection* conn, const mg_request_inf
 	mg_send_file(conn, filename);
 }
 
-extern bool scriptStarted;
-void Scriptability_HandleWebRequest(mg_connection* conn, const mg_request_info* request_info);
-
 void* HTTPService_HandleEvent(mg_event event, mg_connection* conn, const mg_request_info* request_info)
 {
 	if (event == MG_NEW_REQUEST)
@@ -70,10 +67,6 @@ void* HTTPService_HandleEvent(mg_event event, mg_connection* conn, const mg_requ
 			if (Ext_Initialized())
 			{
 				Ext_HandleWebRequest(conn, request_info);
-			}
-			else if (scriptStarted)
-			{
-				Scriptability_HandleWebRequest(conn, request_info);
 			}
 			else
 			{

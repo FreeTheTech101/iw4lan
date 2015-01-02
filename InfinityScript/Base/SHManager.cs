@@ -23,7 +23,6 @@ namespace InfinityScript
                 Entity.InitializeMappings();
                 ScriptNames.Initialize();
                 ScriptLoader.Initialize();
-                WebManager.Initialize();
             }
             catch (Exception ex)
             {
@@ -233,96 +232,6 @@ namespace InfinityScript
             });
 
             return handled;
-        }
-
-        public static byte[] HandleWebRequest(string method, string uri, string query, int numHeaders, int remoteIP)
-        {
-            var headers = new Dictionary<string, string>();
-
-            for (int i = 0; i < numHeaders; i++)
-            {
-                var header = GameInterface.GetHTTPHeader(i);
-                var headerParts = header.Split(new[] { ": " }, 2, StringSplitOptions.None);
-
-                if (headerParts.Length < 2)
-                {
-                    continue;
-                }
-
-                headers[headerParts[0]] = headerParts[1];
-            }
-
-            try
-            {
-                return WebManager.HandleRequest(method, uri.Split('?')[0], query, headers, new IPAddress(BitConverter.GetBytes(IPAddress.NetworkToHostOrder(remoteIP))));
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    Log.Error(ex.InnerException);
-                }
-
-                Log.Error(ex);
-                return Encoding.UTF8.GetBytes("HTTP/1.0 500 Internal Server Error\r\n\r\n" + ex.Message);
-            }
-
-            /*var requestData = new Dictionary<string, object>();
-            requestData["owin.RequestBody"] = Stream.Null;
-            requestData["owin.RequestHeaders"] = headers;
-            requestData["owin.RequestMethod"] = method;
-            requestData["owin.RequestPath"] = uri.Substring(1).Split('?')[0];
-            requestData["owin.RequestPathBase"] = "/";
-            requestData["owin.RequestProtocol"] = "HTTP/1.0";
-            requestData["owin.RequestQueryString"] = query;
-            requestData["owin.RequestScheme"] = "http";
-
-            requestData["owin.Version"] = "1.0";
-            requestData["owin.CallCancelled"] = new System.Threading.CancellationToken();
-
-            WebManager.HandleRequest(requestData);
-
-            try
-            {
-                foreach (var data in requestData)
-                {
-                    Log.Debug(data.Key + ": " + data.Value.ToString());
-                }
-
-                var responseStream = requestData["owin.ResponseBody"] as Stream;
-                var responseHeaders = requestData["owin.ResponseHeaders"] as IDictionary<string, string[]>;
-                var responseStatusCode = requestData.ContainsKey("owin.ResponseStatusCode") ? (int)requestData["owin.ResponseStatusCode"] : 200;
-
-                var response = new StringBuilder();
-                response.Append("HTTP/1.0 ");
-                response.Append(responseStatusCode.ToString());
-                response.Append(" ");
-                response.Append(_statusCodes[responseStatusCode]);
-                response.Append("\r\n");
-
-                foreach (var header in responseHeaders)
-                {
-                    response.Append(header.Key);
-                    response.Append(": ");
-                    response.Append(string.Join(", ", header.Value));
-                    response.Append("\r\n");
-                }
-
-                response.Append("\r\n");
-
-                var headerBytes = Encoding.UTF8.GetBytes(response.ToString());
-                var dataBytes = new byte[responseStream.Length + headerBytes.Length];
-                Array.Copy(headerBytes, dataBytes, headerBytes.Length);
-
-                responseStream.Read(dataBytes, headerBytes.Length, (int)responseStream.Length);
-
-                return dataBytes;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-                return Encoding.UTF8.GetBytes("HTTP/1.0 500 Internal Server Error\r\n\r\n" + ex.Message);
-            }*/
         }
 
         private static Parameter[] CollectParameters(int numArgs)

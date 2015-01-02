@@ -59,9 +59,7 @@ solution "iw4lan"
 			"InfinityScript/**.cs"
 		}
 
-		links { "System", "System.Core", "System.Data", "System.Xml", "System.Web.Razor.Unofficial", "Community.CsharpSqlite", "Microsoft.CSharp", "Nancy", "Nancy.ViewEngines.Razor", "Nancy.ViewEngines.Razor.BuildProviders" }
-
-		libdirs { "InfinityScript/deps/" }
+		links { "System", "System.Core", "System.Data", "System.Xml", "Microsoft.CSharp" }
 
 		local buildHost = os.getenv("COMPUTERNAME") or 'dummy'
 

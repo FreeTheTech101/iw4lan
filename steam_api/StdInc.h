@@ -133,12 +133,6 @@ struct scriptability_s
 	int tempEntRef;
 
 	void* scriptManagerImage;
-
-	bool (__cdecl * cbOnSay)(int client, char* name, char** textptr, int team);
-	void (__cdecl * cbParsePlaylists)(const char* playlistFile);
-	void (__cdecl * cbRotateMap)();
-
-	LPTOP_LEVEL_EXCEPTION_FILTER cbExceptionFilter;
 };
 
 #define BUILDING_EXTDLL

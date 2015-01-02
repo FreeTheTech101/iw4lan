@@ -234,59 +234,6 @@ extern "C"
 		*(DWORD*)0x2040D08 = 0;
 	}
 
-	__declspec(dllexport) void GI_TempFunc()
-	{
-		short** arrayTable = (short**)0x6EAC78;
-		int arrayEl = 6;
-		int i = 0;
-
-		for (short** entry = arrayTable; *entry != NULL; entry += arrayEl)
-		{
-			OutputDebugString(va("AddFieldMapping(\"%s\", %i);\n", SL_ConvertToString(**entry), i));
-			i++;
-		}
-
-		arrayTable = (short**)0x6E5CB0;
-		arrayEl = 6;
-		i = 24576;
-
-		for (short** entry = arrayTable; *entry != NULL; entry += arrayEl)
-		{
-			OutputDebugString(va("AddFieldMapping(\"%s\", %i);\n", SL_ConvertToString(**entry), i));
-			i++;
-		}
-
-		arrayTable = (short**)0x705C70;
-		arrayEl = 6;
-		i = 32768;
-
-		for (short** entry = arrayTable; *entry != NULL; entry += arrayEl)
-		{
-			OutputDebugString(va("AddFieldMapping(\"%s\", %i);\n", SL_ConvertToString(**entry), i));
-			i++;
-		}
-
-		arrayTable = (short**)0x6E7050;
-		arrayEl = 8;
-		i = 0;
-
-		for (short** entry = arrayTable; *entry != NULL; entry += arrayEl)
-		{
-			OutputDebugString(va("AddFieldMapping(\"%s\", %i);\n", SL_ConvertToString(**entry), i));
-			i++;
-		}
-
-		arrayTable = (short**)0x790BE0;
-		arrayEl = 4;
-		i = 0;
-
-		for (short** entry = arrayTable; *entry != NULL; entry += arrayEl)
-		{
-			OutputDebugString(va("AddFieldMapping(\"%s\", %i);\n", SL_ConvertToString(**entry), i));
-			i++;
-		}
-	}
-
 	__declspec(dllexport) int GI_GetObjectType(int object)
 	{
 		int retval = 0;

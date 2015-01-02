@@ -81,11 +81,6 @@ void Com_SaveDediConfig();
 
 scriptability_s* g_scriptability;
 
-bool Scriptability_OnSay(int client, char* name, char** textptr, int team);
-void Scriptability_HandleWebRequest(mg_connection* conn, const mg_request_info* request_info);
-void Scriptability_ParsePlaylists(const char* playlists);
-void Scriptability_RotateMap();
-
 scriptability_s* GetScriptability()
 {
     if (!g_scriptability)
@@ -94,9 +89,6 @@ scriptability_s* GetScriptability()
         memset(g_scriptability, 0, sizeof(*g_scriptability));
 
         g_scriptability->tempEntRef = (int)g_entities;
-        g_scriptability->cbOnSay = Scriptability_OnSay;
-        g_scriptability->cbParsePlaylists = Scriptability_ParsePlaylists;
-        g_scriptability->cbRotateMap = Scriptability_RotateMap;
     }
 
     return g_scriptability;
@@ -143,7 +135,6 @@ extern "C"
 		InitializeDediConfig();
 
         GetScriptability();
-
         InitScriptability();
 
 		SteamProxy_Init();

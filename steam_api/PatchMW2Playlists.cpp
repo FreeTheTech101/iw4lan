@@ -11,9 +11,6 @@
 
 #include "StdInc.h"
 
-bool* gotPlaylists = (bool*)0x1AD3680;
-dvar_t* playlist_enabled;
-
 void PatchMW2_Playlists()
 {
 #ifndef MATCHMAKING
@@ -31,11 +28,7 @@ void PatchMW2_Playlists()
 	*(BYTE*)0x5B69E9 = 0xEB; // too new
 	*(BYTE*)0x5B696E = 0xEB; // too old
 
-	*gotPlaylists = true;
+	// gotPlaylists
+	*(bool*)0x1AD3680 = true;
 #endif
-
-	if (GAME_FLAG(GAME_FLAG_DEDICATED))
-	{
-		playlist_enabled = Dvar_RegisterBool("playlist_enabled", false, DVAR_FLAG_NONE, "Enable playlists");
-	}
 }

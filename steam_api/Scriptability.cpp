@@ -30,9 +30,6 @@ static MonoMethod* sayMethod;
 static MonoMethod* serverCommandMethod;
 static MonoMethod* clientCommandMethod;
 static MonoMethod* scriptInitLevelMethod;
-static MonoMethod* webRequestMethod;
-static MonoMethod* parsePlaylistsMethod;
-static MonoMethod* rotateMapMethod;
 
 //static bool monoStarted = false;
 bool scriptStarted = false;
@@ -145,10 +142,6 @@ void CreateScriptDomain()
 	method_search("InfinityScript.SHManager:HandleSay", sayMethod);
 	method_search("InfinityScript.SHManager:HandleServerCommand", serverCommandMethod);
 	method_search("InfinityScript.SHManager:HandleClientCommand", clientCommandMethod);
-	method_search("InfinityScript.SHManager:HandleWebRequest", webRequestMethod);
-	
-	method_search("InfinityScript.PlaylistManager:ParsePlaylists", parsePlaylistsMethod);
-	method_search("InfinityScript.PlaylistManager:RotateMap", rotateMapMethod);
 
 	mono_add_internal_call("InfinityScript.GameInterface::Cmd_Argv", GI_Cmd_Argv);
 	mono_add_internal_call("InfinityScript.GameInterface::Print", GI_Print);
@@ -162,8 +155,6 @@ void CreateScriptDomain()
 	mono_add_internal_call("InfinityScript.GameInterface::Cmd_Argv_sv", GI_Cmd_Argv_sv);
 	mono_add_internal_call("InfinityScript.GameInterface::Dvar_InfoString_Big", GI_Dvar_InfoString_Big);
 	mono_add_internal_call("InfinityScript.GameInterface::Script_GetString", GI_GetString);
-	mono_add_internal_call("InfinityScript.GameInterface::GetHTTPHeader", GI_GetHTTPHeader);
-	mono_add_internal_call("InfinityScript.GameInterface::ReadHTTPBody", GI_ReadHTTPBody);
 	mono_add_internal_call("InfinityScript.GameInterface::GetDvar", GI_GetDvar);
 	mono_add_internal_call("InfinityScript.GameInterface::ReadFile", GI_ReadFile);
 
@@ -734,79 +725,6 @@ MonoString* GI_Dvar_InfoString_Big(int flag)
 	else return mono_string_new(scriptDomain, "");
 }
 
-// TODO: this is not threadsafe at all!
-//static mg_request_info* mgReqInfo;
-//static mg_connection* mgConn;
-
-void Scriptability_HandleWebRequest(mg_connection* conn, const mg_request_info* request_info)
-{
-	mono_thread_attach(scriptDomain);
-
-	TlsSetValue(tlsConnection, conn);
-	TlsSetValue(tlsReqInfo, (void*)request_info);
-
-	void* args[4];
-
-	MonoString* method = GetMonoStringFromMultiByteString(request_info->request_method);
-	args[0] = method;
-
-	MonoString* uri = GetMonoStringFromMultiByteString(request_info->uri);
-	args[1] = uri;
-	
-	MonoString* qstring = GetMonoStringFromMultiByteString(request_info->query_string ? request_info->query_string : "");
-	args[2] = qstring;
-	
-	int numHeaders = request_info->num_headers;
-	args[3] = &numHeaders;
-
-	int remoteIP = request_info->remote_ip;
-	args[4] = &remoteIP;
-
-	MonoObject* exc = NULL;
-	MonoObject* boolean = mono_runtime_invoke(webRequestMethod, NULL, args, &exc);
-
-	if (exc)
-	{
-		OutputExceptionToDebugger(exc);
-		return;
-	}
-
-	MonoArray* data = (MonoArray*)boolean;
-	char* array = mono_array_addr(data, char, 0);
-	int length = mono_array_length(data);
-
-	mg_write(conn, array, length);
-}
-
-MonoString* GI_GetHTTPHeader(int num)
-{
-	mg_request_info* mgReqInfo = (mg_request_info*)TlsGetValue(tlsReqInfo);
-
-	if (num > mgReqInfo->num_headers)
-	{
-		return nullptr;
-	}
-
-	return GetMonoStringFromMultiByteString(va("%s: %s", mgReqInfo->http_headers[num].name, mgReqInfo->http_headers[num].value));
-}
-
-MonoArray* GI_ReadHTTPBody(int length)
-{
-	mg_connection* mgConn = (mg_connection*)TlsGetValue(tlsConnection);
-
-	char* byteBuffer = new char[length];
-	int bytesRead = mg_read(mgConn, byteBuffer, length);
-
-	MonoArray* data = mono_array_new(scriptDomain, mono_get_byte_class(), bytesRead);
-	char* monoBuffer = mono_array_addr(data, char, 0);
-
-	memcpy(monoBuffer, byteBuffer, bytesRead);
-
-	delete[] byteBuffer;
-
-	return data;
-}
-
 MonoString* GI_GetDvar(MonoString* name, MonoString* defaultValue)
 {
 	dvar_t* dvar = Dvar_FindVar(GetMultiByteStringFromMonoString(name));
@@ -850,55 +768,4 @@ MonoArray* GI_ReadFile(MonoString* filenameStr)
 	FS_FreeFile(buffer);
 
 	return data;
-}
-
-void Scriptability_ParsePlaylists(const char* playlists)
-{
-	if (!scriptStarted)
-	{
-		//mono_domain_unload(scriptDomain);
-		//mono_domain_set(rootDomain, true);
-
-		CreateScriptDomain();
-
-		scriptStarted = true;
-	}
-
-	MonoString* playlistStr = GetMonoStringFromMultiByteString(playlists);
-	if (playlistStr != NULL)
-	{
-		MonoObject* exc = NULL;
-
-		void* args[1];
-		args[0] = playlistStr;
-
-		mono_runtime_invoke(parsePlaylistsMethod, NULL, args, &exc);
-
-		if (exc)
-		{
-			OutputExceptionToDebugger(exc);
-		}
-	}
-}
-
-void Scriptability_RotateMap()
-{
-	if (!scriptStarted)
-	{
-		//mono_domain_unload(scriptDomain);
-		//mono_domain_set(rootDomain, true);
-
-		CreateScriptDomain();
-
-		scriptStarted = true;
-	}
-
-	MonoObject* exc = NULL;
-
-	mono_runtime_invoke(rotateMapMethod, NULL, NULL, &exc);
-
-	if (exc)
-	{
-		OutputExceptionToDebugger(exc);
-	}
 }
