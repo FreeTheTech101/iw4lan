@@ -16,7 +16,6 @@
 #include "PatchMW2Voting.h"
 
 #include <winsock2.h>
-#include <CrashRpt.h>
 
 #pragma unmanaged
 
