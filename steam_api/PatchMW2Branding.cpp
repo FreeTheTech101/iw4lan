@@ -11,14 +11,8 @@
 
 #include "StdInc.h"
 
-typedef void* (__cdecl * R_RegisterFont_t)(const char* asset);
-R_RegisterFont_t R_RegisterFont = (R_RegisterFont_t)0x505670;
-
 typedef void (__cdecl * R_AddCmdDrawText_t)(const char* text, int, void* font, float screenX, float screenY, float, float, float rotation, float* color, int);
 R_AddCmdDrawText_t R_AddCmdDrawText = (R_AddCmdDrawText_t)0x509D80;
-
-typedef void (__cdecl * CL_DrawTextPhysical_t)(const char* text, int, void* font, float screenX, float screenY, float, float, float* color, int);
-CL_DrawTextPhysical_t CL_DrawTextPhysical = (CL_DrawTextPhysical_t)0x4376A0;
 
 CallHook drawDevStuffHook;
 DWORD drawDevStuffHookLoc = 0x5ACB99;
@@ -27,7 +21,8 @@ void DrawDemoWarning()
 {
 	void* font = DB_FindXAssetHeader(ASSET_TYPE_FONT, "fonts/normalFont");
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	R_AddCmdDrawText(VERSIONSTRING, 0x7FFFFFFF, font, 5, 30, 1.0f, 1.0f, 0.0f, color, 0);
+
+	R_AddCmdDrawText("IW4LAN", 0x7FFFFFFF, font, 10, 30, 0.7f, 0.7f, 0.0f, color, 0);
 }
 
 #pragma optimize("", off)
