@@ -128,6 +128,9 @@ void PatchMW2_Dvars()
 	// set ui_browserMod's default to -1 (All)
 	*(BYTE*)0x630FD1 = 0xFF;
 
+	// un-cheat r_fullbright and add archive flags
+	*(BYTE*)0x519887 = DVAR_FLAG_SAVED;
+
 #ifndef MATCHMAKING
 	// playlist minimum -1
 	*(BYTE*)0x404CD5 = 0xFF;
