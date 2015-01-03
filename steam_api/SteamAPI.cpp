@@ -12,64 +12,8 @@
 #include "StdInc.h"
 #include "AdminPlugin.h"
 
-#define CURL_STATICLIB
-#include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
-
 #undef Trace
 #define Trace
-
-size_t UDataReceived(void *ptr, size_t size, size_t nmemb, void *data)
-{
-	size_t rsize = (size * nmemb);
-	char* text = (char*)ptr;
-	int version = atoi(text);
-
-	if (version > BUILDNUMBER)
-	{
-		Com_Error(1, "This version (%d) has expired. Please visit http://twiz.re/ to obtain a new version (%d).", BUILDNUMBER, version);
-	}
-
-	return rsize;
-}
-
-void DisableOldVersions()
-{
-	if (IsDebuggerPresent()) return;
-
-	curl_global_init(CURL_GLOBAL_ALL);
-
-	CURL* curl = curl_easy_init();
-
-	if (curl)
-	{
-		char url[255];
-		_snprintf(url, sizeof(url), "http://twiz.re/version.txt");
-
-		curl_easy_setopt(curl, CURLOPT_URL, url);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, UDataReceived);
-		//curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&steamID);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, VERSIONSTRING);
-		curl_easy_setopt(curl, CURLOPT_FAILONERROR, true);
-
-		CURLcode code = curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
-
-		curl_global_cleanup();
-
-		if (code == CURLE_OK)
-		{
-			return;
-		}
-		else
-		{
-			// TODO: set some offline mode flag
-		}
-	}
-
-	curl_global_cleanup();
-}
 
 void HideCode_FindCreateFile();
 HANDLE WINAPI HideCode_DoCreateFile(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
@@ -78,6 +22,8 @@ void SteamProxy_Init();
 
 void InitializeDediConfig();
 void Com_SaveDediConfig();
+
+void UpdateCheck();
 
 // Steam API code
 extern "C"
@@ -111,7 +57,7 @@ extern "C"
 #endif
 		//HideCode_FindCreateFile();
 
-		DisableOldVersions();
+        UpdateCheck();
 
 		if (GAME_FLAG(GAME_FLAG_DEDICATED))
 		{

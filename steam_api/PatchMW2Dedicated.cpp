@@ -28,7 +28,8 @@ LoadInitialFF_t LoadInitialFF = (LoadInitialFF_t)0x506AC0;
 DWORD dedicatedInitHookLoc = 0x60BE98;
 CallHook dedicatedInitHook;
 
-struct InitialFastFiles_t {
+struct InitialFastFiles_t
+{
 	const char* code_post_gfx_mp;
 	const char* localized_code_post_gfx_mp;
 	const char* ui_mp;
@@ -340,10 +341,13 @@ CallHook gRunFrameHook;
 DWORD gRunFrameHookLoc = 0x62726D;
 
 void ReproCase_ClientDrop();
+void UpdateCheck();
 
 void G_RunFrameHookFunc()
 {
 	//ReproCase_ClientDrop();
+	UpdateCheck();
+
 	Vote_OnFrame();
 #if USE_MANAGED_CODE
 	APC_TriggerFrame();
