@@ -342,12 +342,10 @@ CallHook gRunFrameHook;
 DWORD gRunFrameHookLoc = 0x62726D;
 
 void ReproCase_ClientDrop();
-void Legacy_Advertise();
 
 void G_RunFrameHookFunc()
 {
 	//ReproCase_ClientDrop();
-	Legacy_Advertise();
 	Vote_OnFrame();
 #if USE_MANAGED_CODE
 	APC_TriggerFrame();

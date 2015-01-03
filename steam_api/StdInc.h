@@ -120,6 +120,4 @@ void G_SayToAll(DWORD color, const char* name, const char* text);
 #undef strcpy_s
 #define strcpy_s StringCbCopy
 
-bool Legacy_IsLegacyMode();
-
 #include <mongoose.h>
