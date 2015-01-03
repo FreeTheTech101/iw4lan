@@ -40,13 +40,8 @@ char *Info_ValueForKey( const char *s, const char *key );
 #define GAME_FLAG_DUMPDATA		(1 << 2)
 #define GAME_FLAG_ENTRIES		(1 << 3)
 #define GAME_FLAG_GSCFILESYSTEM	(1 << 4)
-#define GAME_FLAG_D3D9			(1 << 5)
 
-//#ifndef PRE_RELEASE_DEMO
 #define GAME_FLAG(x)			((_gameFlags & x) == x)
-//#else
-//#define GAME_FLAG(x)			false
-//#endif
 
 extern unsigned int _gameFlags;
 void DetermineGameFlags();

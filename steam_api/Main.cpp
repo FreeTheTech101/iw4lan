@@ -40,10 +40,6 @@ void Main_DoInit()
 		Main_UnprotectModule(hModule);
 	}
 
-	//SetEnvironmentVariable("PATH", newPath);
-	//SetCurrentDirectoryA("S:\\games\\steam\\steamapps\\common\\zero gear\\server");
-	//SetCurrentDirectoryA("E:\\mm\\mw2");
-
 	HideCode_FindDeviceIoControl();
 	Sys_RunInit();
 
@@ -93,23 +89,11 @@ bool __stdcall DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 		Main_SetSafeInit();
 #endif
 
-#if !PRE_RELEASE_DEMO
-		CCAPI_Initialize();
-#endif
+		//CCAPI_Initialize();
 
 		static_assert(sizeof(client_t) == 681872, "sizeof(client_t) is not 681872");
 		static_assert(sizeof(gentity_t) == 628, "sizeof(gentity_t) is not 628");
 	}
-	/*else if (dwReason == DLL_THREAD_ATTACH)
-	{
-		DWORD tlsIndex = *(DWORD*)0x66D94A8;
-		TlsSetValue(tlsIndex, new char[0x28]);
-	}
-	else if (dwReason == DLL_THREAD_DETACH)
-	{
-		DWORD tlsIndex = *(DWORD*)0x66D94A8;
-		delete[] TlsGetValue(tlsIndex);
-	}*/
 
 	return true;
 }

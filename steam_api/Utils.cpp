@@ -374,7 +374,6 @@ flagDef_t flags[] =
 	{ L"dump", GAME_FLAG_DUMPDATA },
 	{ L"entries", GAME_FLAG_ENTRIES },
 	{ L"gscfilesystem", GAME_FLAG_GSCFILESYSTEM },
-	{ L"iamaterriblefaggotwhodoesnotdeservetolive", GAME_FLAG_D3D9 },
 	{ 0, 0 }
 };
 
