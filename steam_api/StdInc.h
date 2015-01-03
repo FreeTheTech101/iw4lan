@@ -11,17 +11,10 @@
 
 #pragma once
 
-#define COMPILING_IW4M
+#include "version.h"
 
-#define BUILDNUMBER 1
-#define BUILDNUMBER_STR "1"
-#define BUILDHOST
-
-#define VERSION ""
-
-#define VERSIONSTRING "IW4LAN"
-
-//#define KEY_DISABLED
+#define VERSION BUILDNUMBER_STR
+#define VERSIONSTRING "IW4LAN " BUILDNUMBER_STR
 
 // ---------------------------------------------------------
 #undef _UNICODE
