@@ -131,6 +131,10 @@ void PatchMW2_Dvars()
 	// un-cheat r_fullbright and add archive flags
 	*(BYTE*)0x519887 = DVAR_FLAG_SAVED;
 
+	// detect sv_cheats bypass and patch it
+	*(BYTE*)0x5E36E6 |= DVAR_FLAG_CHEAT;
+	*(BYTE*)0x4D3A4C |= DVAR_FLAG_CHEAT;
+
 #ifndef MATCHMAKING
 	// playlist minimum -1
 	*(BYTE*)0x404CD5 = 0xFF;
