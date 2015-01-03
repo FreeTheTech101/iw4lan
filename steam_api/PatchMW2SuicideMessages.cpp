@@ -13,7 +13,7 @@
 #include "StdInc.h"
 #include <time.h>
 
-dvar_t* iw4m_suicideMsg;
+dvar_t* iw4lan_suicideMsg;
 #define NUM_SUICIDE_MESSAGES 13
 
 static const char* suicideMessages[] = 
@@ -38,7 +38,7 @@ DWORD printObituaryHookLoc = 0x401453;
 
 void ModifyObituaryMessage(char* attackerName, char* buffer)
 {
-	if (!attackerName[0] && (!iw4m_suicideMsg || iw4m_suicideMsg->current.boolean))
+	if (!attackerName[0] && (!iw4lan_suicideMsg || iw4lan_suicideMsg->current.boolean))
 	{
 		char suicideMessage[128] = { 0 };
 		strcat(suicideMessage, " ");
@@ -76,5 +76,5 @@ void PatchMW2_SuicideMessages()
 	printObituaryHook.initialize(printObituaryHookLoc, PrintObituaryHookStub);
 	printObituaryHook.installHook();
 
-	iw4m_suicideMsg = (dvar_t*)Dvar_RegisterBool("iw4m_suicideMsg", 1, DVAR_FLAG_SAVED, "Enables custom suicide messages");
+	iw4lan_suicideMsg = (dvar_t*)Dvar_RegisterBool("iw4lan_suicideMsg", 1, DVAR_FLAG_SAVED, "Enables custom suicide messages");
 }
