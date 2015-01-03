@@ -33,18 +33,22 @@ extern "C"
 		__asm jmp HideCode_DoCreateFile
         //return NULL;
     }
+    
     __declspec(dllexport) HSteamUser __cdecl GetHSteamUser()
     {
         return NULL;
     }
+
     __declspec(dllexport) HSteamPipe __cdecl SteamAPI_GetHSteamPipe()
     {
         return NULL;
     }
+
     __declspec(dllexport) HSteamUser __cdecl SteamAPI_GetHSteamUser()
     {
         return NULL;
     }
+
     __declspec(dllexport) const char *__cdecl SteamAPI_GetSteamInstallPath()
     {
         return NULL;
@@ -95,46 +99,53 @@ extern "C"
 		CSteamBase::RegisterCallback(pCallback, iCallback);
     }
 
-	static bool didRichPresence = false;
-
     __declspec(dllexport) void __cdecl SteamAPI_RunCallbacks()
     {
 		CSteamBase::RunCallbacks();
     }
+
     __declspec(dllexport) void __cdecl SteamAPI_SetMiniDumpComment( const char *pchMsg )
     {
+
     }
 
     __declspec(dllexport) bool __cdecl SteamAPI_SetTryCatchCallbacks( bool bUnknown )
     {
         return bUnknown;
     }
+
     __declspec(dllexport) void __cdecl SteamAPI_Shutdown()
     {
+
     }
+
     __declspec(dllexport) void __cdecl SteamAPI_UnregisterCallResult( CCallbackBase* pResult, SteamAPICall_t APICall )
     {
+
     }
+
     __declspec(dllexport) void __cdecl SteamAPI_UnregisterCallback( CCallbackBase *pCallback, int iCallback )
     {
+
     }
 
     __declspec(dllexport) void __cdecl SteamAPI_WriteMiniDump( uint32 uStructuredExceptionCode, void* pvExceptionInfo, uint32 uBuildID )
     {
+
     }
 
     __declspec(dllexport) ISteamApps* __cdecl SteamApps()
     {
 		Trace("S_API", "SteamApps");
 		return NULL;
-        //return (ISteamApps*)g_pSteamAppsEmu;
     }
+
     __declspec(dllexport) ISteamClient* __cdecl SteamClient()
     {
 		Trace("S_API", "SteamClient");
 		return NULL;
-        //return (ISteamClient*)g_pSteamClientEmu;
     }
+
     __declspec(dllexport) ISteamContentServer* __cdecl SteamContentServer()
     {
         return NULL;
@@ -152,24 +163,24 @@ extern "C"
 
     __declspec(dllexport) void __cdecl SteamContentServer_RunCallbacks()
     {
+
     }
 
     __declspec(dllexport) void __cdecl SteamContentServer_Shutdown()
     {
+
     }
 
     __declspec(dllexport) ISteamFriends* __cdecl SteamFriends()
     {
 		Trace("S_API", "SteamFriends");
 		return (ISteamFriends*)CSteamBase::GetInterface(INTERFACE_STEAMFRIENDS005);
-        //return (ISteamFriends*)g_pSteamFriendsEmu;
     }
 
     __declspec(dllexport) ISteamGameServer* __cdecl SteamGameServer()
     {
 		Trace("S_API", "SteamGameServer");
 		return (ISteamGameServer*)CSteamBase::GetInterface(INTERFACE_STEAMGAMESERVER009);
-        //return (ISteamGameServer*)g_pSteamGameServerEmu;
     }
 
     __declspec(dllexport) ISteamUtils* __cdecl SteamGameServerUtils()
@@ -214,24 +225,24 @@ extern "C"
 
     __declspec(dllexport) void __cdecl SteamGameServer_RunCallbacks()
     {
+
     }
 
     __declspec(dllexport) void __cdecl SteamGameServer_Shutdown()
     {
+
     }
 
     __declspec(dllexport) ISteamMasterServerUpdater* __cdecl SteamMasterServerUpdater()
     {
 		Trace("S_API", "SteamMasterServerUpdater");
 		return (ISteamMasterServerUpdater*)CSteamBase::GetInterface(INTERFACE_STEAMMASTERSERVERUPDATER001);
-        //return (ISteamMasterServerUpdater*)g_pSteamMasterServerUpdaterEmu;
     }
 
     __declspec(dllexport) ISteamMatchmaking* __cdecl SteamMatchmaking()
     {
 		Trace("S_API", "SteamMatchmaking");
 		return (ISteamMatchmaking*)CSteamBase::GetInterface(INTERFACE_STEAMMATCHMAKING007);
-		//return (ISteamMatchmaking*)g_pSteamMatchMakingEmu;
     }
 
     __declspec(dllexport) ISteamMatchmakingServers* __cdecl SteamMatchmakingServers()
@@ -247,27 +258,23 @@ extern "C"
 
     __declspec(dllexport) void* __cdecl SteamRemoteStorage()
     {
-        //return g_pSteamRemoteStorageEmu;
 		return CSteamBase::GetInterface(INTERFACE_STEAMREMOTESTORAGE002);
     }
 
     __declspec(dllexport) ISteamUser* __cdecl SteamUser()
     {
-        //return (ISteamUser*)g_pSteamUserEmu;
 		//Trace("S_API", "SteamUser");
 		return (ISteamUser*)CSteamBase::GetInterface(INTERFACE_STEAMUSER012);
     }
 
     __declspec(dllexport) ISteamUserStats* __cdecl SteamUserStats()
     {
-        //return (ISteamUserStats*)g_pSteamUStatsEmu;
 		Trace("S_API", "SteamUserStats");
 		return NULL;
     }
 
     __declspec(dllexport) ISteamUtils* __cdecl SteamUtils()
     {
-        //return (ISteamUtils*)g_pSteamUtilsEmu;
 		Trace("S_API", "SteamUtils");
 		return (ISteamUtils*)CSteamBase::GetInterface(INTERFACE_STEAMUTILS005);
     }
