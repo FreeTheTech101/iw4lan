@@ -228,7 +228,7 @@ DWORD fsBuildOSPathForThreadHookLocRet = 0x64213F;
 
 static char* writeFile;
 static char* writeFolder;
-dvar_t* iw4m_onelog;
+dvar_t* iw4lan_onelog;
 
 void FS_BuildOSPathForThreadHookTest()
 {
@@ -236,11 +236,11 @@ void FS_BuildOSPathForThreadHookTest()
 
 	if (g_log && strcmp(writeFile, g_log->current.string) == 0)
 	{
-		if (strcmp(writeFolder, "m2demo") != 0)
+		if (strcmp(writeFolder, "iw4lan") != 0)
 		{
 			if (iw4m_onelog->current.boolean)
 			{
-				strcpy_s(writeFolder, 256, "m2demo");
+				strcpy_s(writeFolder, 256, "iw4lan");
 			}
 		}
 	}
@@ -297,5 +297,5 @@ void PatchMW2_Redirect()
 	Cmd_AddCommand("g_log_list", Cbuf_AddServerText_f, &sv_glog_list, 0);
 	Cmd_AddServerCommand("g_log_list", SV_GLog_List_f, &sv_glog_list2);
 
-	iw4m_onelog = (dvar_t*)Dvar_RegisterBool("iw4m_onelog", false, DVAR_FLAG_LATCHED || DVAR_FLAG_SAVED, "Only write the game log to the 'm2demo' OS folder");
+	iw4lan_onelog = (dvar_t*)Dvar_RegisterBool("iw4lan_onelog", false, DVAR_FLAG_LATCHED || DVAR_FLAG_SAVED, "Only write the game log to the 'iw4lan' OS folder");
 }

@@ -11,8 +11,6 @@
 
 #include "StdInc.h"
 
-#define IW4M_OLD_CODE
-
 CallHook ingameMenuHook;
 DWORD ingameMenuHookLoc = 0x41C178;
 

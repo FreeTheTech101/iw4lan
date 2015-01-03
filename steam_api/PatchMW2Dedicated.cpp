@@ -39,7 +39,8 @@ struct InitialFastFiles_t {
 	const char* patch_mp;
 };
 
-void InitDedicatedFastFiles() {
+void InitDedicatedFastFiles()
+{
 	InitialFastFiles_t fastFiles;
 	memset(&fastFiles, 0, sizeof(fastFiles));
 	fastFiles.code_post_gfx_mp = "code_post_gfx_mp";
@@ -84,8 +85,6 @@ void Dvar_SetS_f();
 void SV_Exclamation_f();
 
 dvar_t* sv_sayName;
-dvar_t* iw4m_username;
-dvar_t* iw4m_password;
 
 dvar_t* sv_mapRotation;
 dvar_t* sv_mapRotationCurrent;
