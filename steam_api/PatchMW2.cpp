@@ -107,7 +107,6 @@ void PatchMW2_Stats();
 void PatchMW2_DownloadClient();
 void PatchMW2_DownloadServer();
 void PatchMW2_InGameMenu();
-void PatchMW2_Legacy();
 void PatchMW2_Playlists();
 void PatchMW2_StringTable();
 void PatchMW2_DemoRecording();
@@ -229,7 +228,6 @@ void PatchMW2_159()
 	PatchMW2_Dvars();
 	PatchMW2_ClientCommands();
 	PatchMW2_SayCommands();
-	//PatchMW2_Legacy();
 	PatchMW2_ProtocolSix();
 	PatchMW2_XPBar();
 	PatchMW2_ClientDvar();
