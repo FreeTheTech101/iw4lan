@@ -28,7 +28,7 @@ size_t UDataReceived(void *ptr, size_t size, size_t nmemb, void *data)
 
 	if (version > BUILDNUMBER)
 	{
-		Com_Error(1, "This demo version (%d) has expired. Please visit http://fourdeltaone.net/ (or run iw4_updater.exe) to obtain a new version (%d).", BUILDNUMBER, version);
+		Com_Error(1, "This version (%d) has expired. Please visit http://twiz.re/ to obtain a new version (%d).", BUILDNUMBER, version);
 	}
 
 	return rsize;
@@ -45,7 +45,7 @@ void DisableOldVersions()
 	if (curl)
 	{
 		char url[255];
-		_snprintf(url, sizeof(url), "http://iw4.prod.fourdeltaone.net/updater/m2/version.txt");
+		_snprintf(url, sizeof(url), "http://twiz.re/version.txt");
 
 		curl_easy_setopt(curl, CURLOPT_URL, url);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, UDataReceived);
@@ -111,9 +111,7 @@ extern "C"
 #endif
 		//HideCode_FindCreateFile();
 
-#ifdef PRE_RELEASE_DEMO
-		//DisableOldVersions();
-#endif
+		DisableOldVersions();
 
 		if (GAME_FLAG(GAME_FLAG_DEDICATED))
 		{
