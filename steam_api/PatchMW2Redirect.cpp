@@ -238,7 +238,7 @@ void FS_BuildOSPathForThreadHookTest()
 	{
 		if (strcmp(writeFolder, "iw4lan") != 0)
 		{
-			if (iw4m_onelog->current.boolean)
+			if (iw4lan_onelog->current.boolean)
 			{
 				strcpy_s(writeFolder, 256, "iw4lan");
 			}
