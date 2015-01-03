@@ -180,7 +180,8 @@ FakesAssemblies/
 *.sln
 *.filters
 
-steam_api/buildnumber.h
-deps/tools/lastrev.txt
+# gitrev
+buildnumber.h
+lastrev.txt
 
 premake5.exe
