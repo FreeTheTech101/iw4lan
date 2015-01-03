@@ -175,9 +175,12 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 # we use premake, so no solutions should get committed
+*.csproj
 *.vcxproj
 *.sln
 *.filters
 
+steam_api/buildnumber.h
+deps/tools/lastrev.txt
+
 premake5.exe
-clean.cmd

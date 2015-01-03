@@ -43,6 +43,13 @@ solution "iw4lan"
 		configuration "windows"
 			linkoptions "/IGNORE:4248 /IGNORE:4049 /IGNORE:4099 /DYNAMICBASE:NO /SAFESEH:NO"
 
+		prebuildcommands
+		{
+			"pushd \"$(SolutionDir)\\deps\\tools\"",
+			"call \"$(SolutionDir)\\deps\\tools\\gitrev.cmd\"",
+			"popd"
+		}
+
 	project "InfinityScript"
 		targetname "InfinityScript"
 		language "C#"

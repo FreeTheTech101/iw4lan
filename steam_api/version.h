@@ -1,2 +1,0 @@
-#define BUILDNUMBER 1.0
-#define BUILDNUMBER_STR "1.0"

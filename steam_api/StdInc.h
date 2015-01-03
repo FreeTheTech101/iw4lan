@@ -11,10 +11,10 @@
 
 #pragma once
 
-#include "version.h"
+#include "buildnumber.h"
 
 #define VERSION BUILDNUMBER_STR
-#define VERSIONSTRING "IW4LAN " BUILDNUMBER_STR
+#define VERSIONSTRING "IW4LAN r" VERSION
 
 // ---------------------------------------------------------
 #undef _UNICODE
