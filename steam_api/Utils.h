@@ -73,4 +73,3 @@ DWORD FindPattern(DWORD dwAddress, DWORD dwLen, BYTE *bMask, char *szMask);
 bool startsWith(const char *str, const char *pre);
 
 char* Config_GetUsername();
-int Config_GetUserID();

@@ -567,11 +567,3 @@ char* Config_GetUsername()
 	char* username = iniReader.ReadString("Configuration", "Nickname", "UnknownPlayer");
 	return username;
 }
-
-int Config_GetUserID()
-{
-	CIniReader iniReader(".\\iw4lan.ini");
-	
-	int id = iniReader.ReadInteger("Configuration", "SteamID", 0);
-	return id;
-}
