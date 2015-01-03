@@ -11,18 +11,57 @@
 
 #include "StdInc.h"
 
+typedef int (__cdecl * R_TextWidth_t)(const char* text, int maxlength, Font* font);
+R_TextWidth_t R_TextWidth = (R_TextWidth_t)0x5056C0;
+
+typedef void* (__cdecl * R_RegisterFont_t)(const char* asset);
+R_RegisterFont_t R_RegisterFont = (R_RegisterFont_t)0x505670;
+
 typedef void (__cdecl * R_AddCmdDrawText_t)(const char* text, int, void* font, float screenX, float screenY, float, float, float rotation, float* color, int);
 R_AddCmdDrawText_t R_AddCmdDrawText = (R_AddCmdDrawText_t)0x509D80;
+
+dvar_t* cg_hideVersion;
 
 CallHook drawDevStuffHook;
 DWORD drawDevStuffHookLoc = 0x5ACB99;
 
-void DrawDemoWarning()
+int R_GetScaledWidth(const char* text, float sizeX, void* font)
 {
-	void* font = DB_FindXAssetHeader(ASSET_TYPE_FONT, "fonts/normalFont");
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	if (!R_TextWidth)
+	{
+		return 0;
+	}
 
-	R_AddCmdDrawText("IW4LAN", 0x7FFFFFFF, font, 10, 30, 0.7f, 0.7f, 0.0f, color, 0);
+	int normalWidth = R_TextWidth(text, 0x7FFFFFFF, (Font*)font);
+	double scaledWidth = normalWidth * sizeX;
+
+	return (int)scaledWidth;
+}
+
+void DrawBranding()
+{
+	if (!cg_hideVersion->current.boolean)
+	{
+		float font_size = 0.7f;
+		void* font = R_RegisterFont("fonts/normalFont");
+
+		int textWidth = R_GetScaledWidth("IW4LAN", font_size, font);
+
+		auto width = [] (int offset, int width)
+		{
+			return *(int*)0x66E1C68 - ( offset + width );
+		};
+
+		float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		if (CL_IsCgameInitialized())
+		{
+			color[3] = 0.3f;
+		}
+
+		R_AddCmdDrawText("IW4LAN", 0x7FFFFFFF, font, width(10, textWidth), 30, font_size, font_size, 0.0f, color, 0);
+	}
+
 }
 
 #pragma optimize("", off)
@@ -30,19 +69,42 @@ void __declspec(naked) DrawDevStuffHookStub()
 {
 	__asm
 	{
-		call DrawDemoWarning
+		call DrawBranding
 		jmp drawDevStuffHook.pOriginal
 	}
 }
 #pragma optimize("", on)
 
+HWND WINAPI CreateWindowExAWrap_WC(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
+{
+	if (strcmp(lpClassName, "IW4 WinConsole"))
+	{
+		return CreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+	}
+
+	return CreateWindowExW(dwExStyle, L"IW4 WinConsole", L"IW4LAN Console", dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+}
+
+HWND WINAPI CreateWindowExAWrap_G(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
+{
+	return CreateWindowExW(dwExStyle, L"IW4", L"IW4LAN", dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+}
+
 void PatchMW2_Branding()
 {
+	cg_hideVersion = Dvar_RegisterBool("cg_hideVersion", false, DVAR_FLAG_SAVED, "Hide the version release branding text.");
+
 	drawDevStuffHook.initialize(drawDevStuffHookLoc, DrawDevStuffHookStub);
 	drawDevStuffHook.installHook();
 
+	// createwindowexa on winconsole
+	static DWORD wcCWEx = (DWORD)CreateWindowExAWrap_WC;
+	static DWORD wcGEx = (DWORD)CreateWindowExAWrap_G;
+	*(DWORD**)0x4289CA = &wcCWEx;
+	*(DWORD**)0x5076AC = &wcGEx;
+
 	// displayed build tag in UI code
-	*(DWORD*)0x43F73B = (DWORD)"";
+	*(DWORD*)0x43F73B = (DWORD)VERSIONSTRING;
 
 	// console '%s: %s> ' string
 	*(DWORD*)0x5A44B4 = (DWORD)(VERSIONSTRING "> ");
