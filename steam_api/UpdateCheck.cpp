@@ -17,8 +17,6 @@
 #include <curl/easy.h>
 
 static int lastUpdateCheck;
-static int timeTillShutdown;
-static bool warningGiven;
 
 #define UPDATE_LOCATION "http://twiz.re/"
 
@@ -32,33 +30,7 @@ size_t UDataReceived(void *ptr, size_t size, size_t nmemb, void *data)
 	{
 		if (GAME_FLAG(GAME_FLAG_DEDICATED))
 		{
-			if ((Com_Milliseconds() - timeTillShutdown) > 21600000)
-			{
-				// kick all players
-				for (int i = 0; i < *svs_numclients; i++)
-				{
-					client_t* client = &svs_clients[i];
-
-					if (client->state < 3)
-					{
-						continue;
-					}
-
-					Cmd_ExecuteSingleCommand(0, 0, va("clientkick %i", client));
-				}
-
-				Com_Error(0, "This version (%d) of IW4LAN is outdated.\nPlease visit " UPDATE_LOCATION " to obtain a new version (%d).", BUILDNUMBER, version);
-			}
-
-			Com_Printf(0, "[UpdateCheck] This version (%d) of IW4LAN, please visit " UPDATE_LOCATION " to obtain a new version (%d).", BUILDNUMBER, version);
-
-			if (!warningGiven)
-			{
-				MessageBoxA(NULL, va("This version (%d) of IW4LAN is outdated. Please shut down the server and visit " UPDATE_LOCATION " to obtain a new version (%d).\nThe server will automatically shutdown in 6 hours should you not update.", BUILDNUMBER, version), "Update available", MB_OK | MB_ICONINFORMATION);
-
-				warningGiven = true;
-				timeTillShutdown = Com_Milliseconds();
-			}
+			Com_Printf(0, "[UpdateCheck] This version (%d) of IW4LAN is outdated, please visit " UPDATE_LOCATION " to obtain a new version (%d).", BUILDNUMBER, version);
 
 			for (int i = 0; i < *svs_numclients; i++)
 			{
