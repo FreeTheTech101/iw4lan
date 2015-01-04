@@ -1,4 +1,4 @@
 iw4lan
 ======
 
-Issue tracker and wiki for the IW4LAN project.
+Issue tracker and documentation for the IW4LAN project.
