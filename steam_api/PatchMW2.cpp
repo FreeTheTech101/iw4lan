@@ -228,7 +228,7 @@ void PatchMW2_159()
 	PatchMW2_Dvars();
 	PatchMW2_ClientCommands();
 	PatchMW2_SayCommands();
-	PatchMW2_ProtocolSix();
+	//PatchMW2_ProtocolSix();
 	PatchMW2_XPBar();
 	PatchMW2_ClientDvar();
 	PatchMW2_VA();

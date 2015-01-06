@@ -295,6 +295,13 @@ bool NET_StringToAdr_c(const char* s, netadr_t* a)
 		return true;
 	}
 
+	if (!strcmp(s, "bot"))
+	{
+		memset(a, 0, sizeof(*a));
+		a->type = NA_BOT;
+		return true;
+	}
+
 	// look for a port number
 	strncpy(base, s, sizeof(base));
 
@@ -352,6 +359,9 @@ int NET_CompareBaseAdrSigned_c(netadr_t* a, netadr_t* b)
 		return qtrue;
 
 	if (a->type == NA_LOOPBACK)
+		return qfalse;
+
+	if (a->type == NA_BOT)
 		return qfalse;
 
 	if (a->type == NA_IP)
