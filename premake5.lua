@@ -28,17 +28,37 @@ solution "iw4lan"
 		
 		files
 		{
-			"steam_api/**.cpp", "steam_api/**.h", "steam_api/StdInc.cpp"
+			"steam_api/**.cpp",
+			"steam_api/**.h",
+			"steam_api/StdInc.cpp"
 		}
 
 		pchsource "steam_api/StdInc.cpp"
 		pchheader "StdInc.h"
 		
-		includedirs { "deps/include/osw/", "deps/include/python/" }
-		
-		libdirs { "deps/lib/" }
+		includedirs { "deps/include/osw/", "deps/include/python/", "deps/include/cef/" }
 
-		links { "tomcrypt.lib", "tommath.lib", "tinyxml.lib", "zlib.lib", "ws2_32.lib", "winmm.lib", "wldap32.lib", "dbghelp.lib", "python32.lib", "python32_socket.lib", "shlwapi.lib", "libcurl.lib", "pdcurses.lib", "iphlpapi.lib", "mono.lib", "mongoose.lib" }
+		links
+		{
+			"tomcrypt",
+			"tommath",
+			"tinyxml",
+			"zlib",
+			"ws2_32",
+			"winmm",
+			"wldap32",
+			"dbghelp",
+			"python32",
+			"python32_socket",
+			"shlwapi",
+			"libcurl",
+			"pdcurses",
+			"iphlpapi",
+			"mono",
+			"mongoose",
+			"libcef",
+			"libcef_dll_wrapper"
+		}
 
 		configuration "windows"
 			linkoptions "/IGNORE:4248 /IGNORE:4049 /IGNORE:4099 /DYNAMICBASE:NO /SAFESEH:NO"
@@ -60,4 +80,11 @@ solution "iw4lan"
 			"InfinityScript/**.cs"
 		}
 
-		links { "System", "System.Core", "System.Data", "System.Xml", "Microsoft.CSharp" }
+		links
+		{
+			"System",
+			"System.Core",
+			"System.Data",
+			"System.Xml",
+			"Microsoft.CSharp"
+		}

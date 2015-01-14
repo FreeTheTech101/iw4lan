@@ -101,19 +101,19 @@ void PatchMW2_NoBorder();
 void PatchMW2_LogInitGame();
 void PatchMW2_RemoteConsoleClient();
 void PatchMW2_ProtocolSix();
+void PatchMW2_Materialism();
 void PatchMW2_Branding();
 void PatchMW2_ScriptCompileDebug();
 void PatchMW2_Stats();
 void PatchMW2_DownloadClient();
 void PatchMW2_DownloadServer();
 void PatchMW2_InGameMenu();
+void PatchMW2_FXAA();
 void PatchMW2_Playlists();
 void PatchMW2_StringTable();
 void PatchMW2_DemoRecording();
 void PatchMW2_ScoreboardInfo();
 void PatchMW2_Script();
-void PatchMW2_FifthInfinity();
-void PatchMW2_CryptoFiles();
 void PatchMW2_SuicideMessages();
 void PatchMW2_Dvars();
 void PatchMW2_ClientCommands();
@@ -132,7 +132,11 @@ void PatchMW2_RecordingSV();
 void PatchMW2_FrameTime();
 void PatchMW2_FrameRate();
 
+void PatchMW2_FifthInfinity();
+void PatchMW2_T6Clips();
 void InitScriptability();
+void PatchMW2_CryptoFiles();
+void PatchMW2_NUI();
 
 void PatchMW2_159()
 {
@@ -210,12 +214,14 @@ void PatchMW2_159()
 	PatchMW2_Load();
 	PatchMW2_Hello();
 	PatchMW2_AssetRestrict();
+	PatchMW2_Materialism();
 	PatchMW2_Branding();
 	PatchMW2_ScriptCompileDebug();
 	PatchMW2_Stats();
 	//PatchMW2_DownloadClient();
 	//PatchMW2_DownloadServer();
 	PatchMW2_InGameMenu();
+	PatchMW2_FXAA();
 	PatchMW2_Playlists();
 	PatchMW2_StringTable();
 	PatchMW2_DemoRecording();
@@ -242,7 +248,11 @@ void PatchMW2_159()
 	PatchMW2_FrameTime();
 	//PatchMW2_FrameRate();
 
+	PatchMW2_FifthInfinity();
+	PatchMW2_T6Clips();
 	InitScriptability();
+	PatchMW2_CryptoFiles();
+	PatchMW2_NUI();
 
 	bool nativeConsole = GAME_FLAG(GAME_FLAG_CONSOLE);
 
@@ -259,6 +269,7 @@ void PatchMW2_159()
 		PatchMW2_RemoteConsoleClient();
 		PatchMW2_MusicalTalent();
 		PatchMW2_OneThread();
+		PatchMW2_NUI();
 	}
 
 	if (nativeConsole)
