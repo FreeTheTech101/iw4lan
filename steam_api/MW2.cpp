@@ -67,6 +67,8 @@ FS_FTell_t FS_FTell = (FS_FTell_t)0x4E6760;
 
 G_LogPrintf_t G_LogPrintf = (G_LogPrintf_t)0x4B0150;
 
+Menus_FindByName_t Menus_FindByName = (Menus_FindByName_t)0x487240;
+
 MSG_Init_t MSG_Init = (MSG_Init_t)0x45FCA0;
 MSG_ReadData_t MSG_ReadData = (MSG_ReadData_t)0x4527C0;
 MSG_ReadLong_t MSG_ReadLong = (MSG_ReadLong_t)0x4C9550;

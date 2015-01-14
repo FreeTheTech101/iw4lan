@@ -221,18 +221,19 @@ void NUI_CreateBrowser()
 	cef_string_utf16_set(L"GameData", 8, &cSettings.locales_dir_path, true);
 	cef_string_utf16_set(L"en-US", 5, &cSettings.locale, true);
 
-	CefInitialize(args, cSettings, app.get());
+	CefInitialize(args, cSettings, app.get(), nullptr);
 	CefRegisterSchemeHandlerFactory("nui", "game", new NUISchemeHandlerFactory());
 
 	CefRefPtr<CefClient> client(new NUIClient());
 
 	CefWindowInfo info;
-	info.SetAsOffScreen(GetDesktopWindow()); // ?!
+	info.SetAsOffScreen(GetDesktopWindow());
 	info.SetTransparentPainting(true);
 
 	CefBrowserSettings settings;
 
-	CefBrowserHost::CreateBrowser(info, client, "nui://game/index.html", settings);
+	CefRefPtr<CefRequestContext> rc = CefRequestContext::GetGlobalContext();
+	CefBrowserHost::CreateBrowser(info, client, "nui://game/index.html", settings, rc);
 	//CefBrowserHost::CreateBrowser(info, client, "http://anthonycalzadilla.com/css3-ATAT/index.html", settings);
 
 	call(0x6B8ABB, NUI_Shutdown, PATCH_CALL);
@@ -298,27 +299,7 @@ void NUI_ReloadPage_f()
 	}
 }
 
-#pragma optimize("", off)
-void Image_Setup(GfxImage* image, short width, short height, short depth, unsigned int flags, int format)
-{
-	DWORD func = 0x54AF50;
-
-	__asm
-	{
-		push edi
-		mov eax, image
-		mov di, width
-		push format
-		push flags
-		push 0
-		push depth
-		push height
-		call func
-		add esp, 14h
-		pop edi
-	}
-}
-#pragma optimize("", on)
+void Image_Setup(GfxImage* image, short width, short height, short depth, unsigned int flags, int format);
 
 Material* Material_Register(const char* filename);
 

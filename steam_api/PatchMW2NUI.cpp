@@ -48,9 +48,6 @@ void UI_InitHookFunc()
 	memset((void*)0x4A588A, 0x90, 10);
 }
 
-typedef menuDef_t* (__cdecl * Menus_FindByName_t)(void* uiInfoArray, const char* name);
-Menus_FindByName_t Menus_FindByName = (Menus_FindByName_t)0x487240;
-
 StompHook menusOpenHook;
 DWORD menusOpenHookLoc = 0x4B72F0;
 

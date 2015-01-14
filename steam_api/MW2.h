@@ -964,6 +964,10 @@ typedef void (__cdecl * G_LogPrintf_t)(char*, ...);
 extern G_LogPrintf_t G_LogPrintf;
 
 
+typedef menuDef_t* (__cdecl * Menus_FindByName_t)(void* uiInfoArray, const char* name);
+extern Menus_FindByName_t Menus_FindByName;
+
+
 typedef void (__cdecl * MSG_Init_t)(void* msg, void* data, int maxsize);
 extern MSG_Init_t MSG_Init;
 

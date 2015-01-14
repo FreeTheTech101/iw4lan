@@ -119,6 +119,7 @@ void PatchMW2_Script();
 void PatchMW2_SuicideMessages();
 void PatchMW2_Dvars();
 void PatchMW2_ClientCommands();
+void PatchMW2_Loadscreens();
 void PatchMW2_UIScripts();
 void PatchMW2_SayCommands();
 void PatchMW2_XPBar();
@@ -269,6 +270,7 @@ void PatchMW2_159()
 		PatchMW2_ClientConsole();
 		PatchMW2_NoBorder();
 		PatchMW2_RemoteConsoleClient();
+		PatchMW2_Loadscreens();
 		PatchMW2_MusicalTalent();
 		PatchMW2_OneThread();
 		PatchMW2_NUI();

@@ -183,8 +183,7 @@ void Material_Delete(const char* name, const char* imageCondition)
 }
 
 const char* LoadScreens_Filename();
-
-GfxImage* g_nuiImage;
+extern GfxImage* g_nuiImage;
 
 Material* Material_Register(const char* filename)
 {
@@ -317,7 +316,7 @@ Material* Material_Register(const char* filename)
 
 	if (!_stricmp(filename, "nui"))
 	{
-		return Material_ObtainImage(filename, g_nuiDraw->nuiImage);
+		return Material_ObtainImage(filename, g_nuiImage);
 	}
 
 	if (!_stricmp(filename, "hud_icon_wager"))

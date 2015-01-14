@@ -11,7 +11,6 @@
 
 #include "StdInc.h"
 
-#ifdef WE_DO_WANT_NUI
 #include "NUI.h"
 #include <unordered_map>
 #include <queue>
@@ -169,19 +168,7 @@ typedef struct stringTable_s {
 	stringTableValue_t* data;
 } stringTable_t;
 
-int StringTableHash(char* data)
-{
-	int hash = 0;
-
-	while (*data != 0)
-	{
-		hash = tolower(*data) + (31 * hash);
-
-		data++;
-	}
-
-	return hash;
-}
+int StringTableHash(char* data);
 
 bool NUIExtensionHandler::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
@@ -402,4 +389,3 @@ void InvokeNUICallback(const CefString& name, const CefV8ValueList& arguments)
 		CefPostTask(TID_RENDERER, NewCefRunnableFunction(&InvokeNUICallbackInternal, name, arguments));
 	}
 }
-#endif

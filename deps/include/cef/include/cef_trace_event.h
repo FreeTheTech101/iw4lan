@@ -157,12 +157,6 @@ extern "C" {
 // - |id| is used to disambiguate counters with the same name, or match async
 //   trace events
 
-CEF_EXPORT void cef_trace_event(const char* category,
-                                const char* name,
-                                const char* arg1_name,
-                                uint64 arg1_val,
-                                const char* arg2_name,
-                                uint64 arg2_val);
 CEF_EXPORT void cef_trace_event_instant(const char* category,
                                         const char* name,
                                         const char* arg1_name,
@@ -207,13 +201,20 @@ CEF_EXPORT void cef_trace_event_async_begin(const char* category,
                                             const char* arg2_name,
                                             uint64 arg2_val,
                                             int copy);
-CEF_EXPORT void cef_trace_event_async_step(const char* category,
-                                           const char* name,
-                                           uint64 id,
-                                           uint64 step,
-                                           const char* arg1_name,
-                                           uint64 arg1_val,
-                                           int copy);
+CEF_EXPORT void cef_trace_event_async_step_into(const char* category,
+                                                const char* name,
+                                                uint64 id,
+                                                uint64 step,
+                                                const char* arg1_name,
+                                                uint64 arg1_val,
+                                                int copy);
+CEF_EXPORT void cef_trace_event_async_step_past(const char* category,
+                                                const char* name,
+                                                uint64 id,
+                                                uint64 step,
+                                                const char* arg1_name,
+                                                uint64 arg1_val,
+                                                int copy);
 CEF_EXPORT void cef_trace_event_async_end(const char* category,
                                           const char* name,
                                           uint64 id,
@@ -233,12 +234,31 @@ CEF_EXPORT void cef_trace_event_async_end(const char* category,
 // - category and name strings must have application lifetime (statics or
 //   literals). They may not include " chars.
 #define CEF_TRACE_EVENT0(category, name) \
-  cef_trace_event(category, name, NULL, 0, NULL, 0)
+  cef_trace_event_begin(category, name, NULL, 0, NULL, 0, false); \
+  CEF_INTERNAL_TRACE_END_ON_SCOPE_CLOSE(category, name)
 #define CEF_TRACE_EVENT1(category, name, arg1_name, arg1_val) \
-  cef_trace_event(category, name, arg1_name, arg1_val, NULL, 0)
+  cef_trace_event_begin(category, name, arg1_name, arg1_val, NULL, 0, false); \
+  CEF_INTERNAL_TRACE_END_ON_SCOPE_CLOSE(category, name)
 #define CEF_TRACE_EVENT2(category, name, arg1_name, arg1_val, arg2_name, \
       arg2_val) \
-  cef_trace_event(category, name, arg1_name, arg1_val, arg2_name, arg2_val)
+  cef_trace_event_begin(category, name, arg1_name, arg1_val, \
+                                        arg2_name, arg2_val, false); \
+  CEF_INTERNAL_TRACE_END_ON_SCOPE_CLOSE(category, name)
+
+// Implementation detail: trace event macros create temporary variable names.
+// These macros give each temporary variable a unique name based on the line
+// number to prevent name collisions.
+#define CEF_INTERNAL_TRACE_EVENT_UID3(a,b) \
+  cef_trace_event_unique_##a##b
+#define CEF_INTERNAL_TRACE_EVENT_UID2(a,b) \
+  CEF_INTERNAL_TRACE_EVENT_UID3(a,b)
+#define CEF_INTERNAL_TRACE_EVENT_UID(name_prefix) \
+  CEF_INTERNAL_TRACE_EVENT_UID2(name_prefix, __LINE__)
+
+// Implementation detail: internal macro to end end event when the scope ends.
+#define CEF_INTERNAL_TRACE_END_ON_SCOPE_CLOSE(category, name) \
+   cef_trace_event_internal::CefTraceEndOnScopeClose \
+       CEF_INTERNAL_TRACE_EVENT_UID(profileScope)(category, name)
 
 // Records a single event called "name" immediately, with 0, 1 or 2
 // associated arguments. If the category is not enabled, then this
@@ -396,23 +416,43 @@ CEF_EXPORT void cef_trace_event_async_end(const char* category,
   cef_trace_event_async_begin(category, name, id, arg1_name, arg1_val, \
       arg2_name, arg2_val, true)
 
-// Records a single ASYNC_STEP event for |step| immediately. If the category
-// is not enabled, then this does nothing. The |name| and |id| must match the
-// ASYNC_BEGIN event above. The |step| param identifies this step within the
-// async event. This should be called at the beginning of the next phase of an
-// asynchronous operation.
-#define CEF_TRACE_EVENT_ASYNC_STEP0(category, name, id, step) \
-  cef_trace_event_async_step(category, name, id, step, NULL, 0, false)
-#define CEF_TRACE_EVENT_ASYNC_STEP1(category, name, id, step, \
+// Records a single ASYNC_STEP_INTO event for |step| immediately. If the
+// category is not enabled, then this does nothing. The |name| and |id| must
+// match the ASYNC_BEGIN event above. The |step| param identifies this step
+// within the async event. This should be called at the beginning of the next
+// phase of an asynchronous operation. The ASYNC_BEGIN event must not have any
+// ASYNC_STEP_PAST events.
+#define CEF_TRACE_EVENT_ASYNC_STEP_INTO0(category, name, id, step) \
+  cef_trace_event_async_step_into(category, name, id, step, NULL, 0, false)
+#define CEF_TRACE_EVENT_ASYNC_STEP_INTO1(category, name, id, step, \
       arg1_name, arg1_val) \
-  cef_trace_event_async_step(category, name, id, step, arg1_name, arg1_val, \
-      false)
-#define CEF_TRACE_EVENT_COPY_ASYNC_STEP0(category, name, id, step) \
-  cef_trace_event_async_step(category, name, id, step, NULL, 0, true)
-#define CEF_TRACE_EVENT_COPY_ASYNC_STEP1(category, name, id, step, \
+  cef_trace_event_async_step_into(category, name, id, step, arg1_name, \
+      arg1_val, false)
+#define CEF_TRACE_EVENT_COPY_ASYNC_STEP_INTO0(category, name, id, step) \
+  cef_trace_event_async_step_into(category, name, id, step, NULL, 0, true)
+#define CEF_TRACE_EVENT_COPY_ASYNC_STEP_INTO1(category, name, id, step, \
       arg1_name, arg1_val) \
-  cef_trace_event_async_step(category, name, id, step, arg1_name, arg1_val, \
-      true)
+  cef_trace_event_async_step_into(category, name, id, step, arg1_name, \
+      arg1_val, true)
+
+// Records a single ASYNC_STEP_PAST event for |step| immediately. If the
+// category is not enabled, then this does nothing. The |name| and |id| must
+// match the ASYNC_BEGIN event above. The |step| param identifies this step
+// within the async event. This should be called at the beginning of the next
+// phase of an asynchronous operation. The ASYNC_BEGIN event must not have any
+// ASYNC_STEP_INTO events.
+#define CEF_TRACE_EVENT_ASYNC_STEP_PAST0(category, name, id, step) \
+  cef_trace_event_async_step_past(category, name, id, step, NULL, 0, false)
+#define CEF_TRACE_EVENT_ASYNC_STEP_PAST1(category, name, id, step, \
+      arg1_name, arg1_val) \
+  cef_trace_event_async_step_past(category, name, id, step, arg1_name, \
+      arg1_val, false)
+#define CEF_TRACE_EVENT_COPY_ASYNC_STEP_PAST0(category, name, id, step) \
+  cef_trace_event_async_step_past(category, name, id, step, NULL, 0, true)
+#define CEF_TRACE_EVENT_COPY_ASYNC_STEP_PAST1(category, name, id, step, \
+      arg1_name, arg1_val) \
+  cef_trace_event_async_step_past(category, name, id, step, arg1_name, \
+      arg1_val, true)
 
 // Records a single ASYNC_END event for "name" immediately. If the category
 // is not enabled, then this does nothing.
@@ -435,5 +475,24 @@ CEF_EXPORT void cef_trace_event_async_end(const char* category,
       arg1_val, arg2_name, arg2_val) \
   cef_trace_event_async_end(category, name, id, arg1_name, arg1_val, \
       arg2_name, arg2_val, true)
+
+namespace cef_trace_event_internal {
+
+// Used by CEF_TRACE_EVENTx macro. Do not use directly.
+class CefTraceEndOnScopeClose {
+ public:
+  CefTraceEndOnScopeClose(const char* category, const char* name)
+      : category_(category), name_(name) {
+  }
+  ~CefTraceEndOnScopeClose() {
+    cef_trace_event_end(category_, name_, NULL, 0, NULL, 0, false);
+  }
+
+ private:
+  const char* category_;
+  const char* name_;
+};
+
+}  // cef_trace_event_internal
 
 #endif  // CEF_INCLUDE_CEF_TRACE_EVENT_H_
