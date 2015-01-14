@@ -83,6 +83,8 @@ struct IDirect3DDevice9;
 // Hooking
 #include "Hooking.h"
 
+#include "HookFunction.h"
+
 // more names
 void PatchMW2();
 void Sys_RunInit();

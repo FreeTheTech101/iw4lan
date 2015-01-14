@@ -37,6 +37,8 @@ void PatchMW2()
 
 		InitProfile();
 
+		HookFunctionBase::RunAll();
+
 		if (!GAME_FLAG(GAME_FLAG_DEDICATED))
 		{
 			if (GetProcAddress(GetModuleHandle("kernel32.dll"), "InitializeSRWLock"))
