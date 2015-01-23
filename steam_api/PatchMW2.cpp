@@ -201,6 +201,10 @@ void PatchMW2_159()
 	*(BYTE*)0x4BD900 = 0xC3; // main LSP response func
 	*(BYTE*)0x682170 = 0xC3; // Telling LSP that we're playing a private match
 
+	// don't check NAT status -- momo5502
+	// https://github.com/momo5502/iw4-test/blob/master/iw4-test/Main.cpp#L334
+	*(DWORD*)0x79D898 = 1;
+
 	*(const char**)0x51F5A6 = "Could not load image '%s'. If this image name starts with 'preview_mp_', you might be missing iw_22.iwd/iw_23.iwd. Read the relevant FAQ entry on http://fourdeltaone.net/#/support :)";
 
 	// always call _fpmath callback
