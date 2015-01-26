@@ -341,12 +341,10 @@ CallHook gRunFrameHook;
 DWORD gRunFrameHookLoc = 0x62726D;
 
 void ReproCase_ClientDrop();
-void UpdateCheck();
 
 void G_RunFrameHookFunc()
 {
 	//ReproCase_ClientDrop();
-	UpdateCheck();
 
 	Vote_OnFrame();
 #if USE_MANAGED_CODE

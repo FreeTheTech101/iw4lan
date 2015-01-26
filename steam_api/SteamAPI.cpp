@@ -23,8 +23,6 @@ void SteamProxy_Init();
 void InitializeDediConfig();
 void Com_SaveDediConfig();
 
-void UpdateCheck();
-
 // Steam API code
 extern "C"
 {
@@ -60,8 +58,6 @@ extern "C"
 		IW4::AdminPluginCode::Initialize();
 #endif
 		//HideCode_FindCreateFile();
-
-        UpdateCheck();
 
 		if (GAME_FLAG(GAME_FLAG_DEDICATED))
 		{
