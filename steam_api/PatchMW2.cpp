@@ -211,6 +211,10 @@ void PatchMW2_159()
 	// always call _fpmath callback
 	*(WORD*)0x6B8B9F = 0x9090;
 
+	// allow loading of IWffu (unsigned) files
+	*(BYTE*)0x4158D9 = 0xEB; // main function
+	*(WORD*)0x4A1D97 = 0x9090; // DB_AuthLoad_InflateInit
+
 	// more detailed patches
 	PatchMW2_FFHash();
 	PatchMW2_Modding();
@@ -278,6 +282,7 @@ void PatchMW2_159()
 		PatchMW2_Loadscreens();
 		PatchMW2_MusicalTalent();
 		PatchMW2_OneThread();
+
 #ifdef WE_DO_WANT_NUI
 		PatchMW2_NUI();
 #endif
@@ -314,6 +319,10 @@ void PatchMW2_FFHash()
 
 	*(BYTE*)0x5BA602 = 0xB8;
 	*(DWORD*)0x5BA603 = 1;
+
+	// third basic .ff hash check
+	*(WORD*)0x5B9962 = 0x9090;
+	*(WORD*)0x5BA652 = 0x9090;
 
 	if (IsDebuggerPresent())
 	{
