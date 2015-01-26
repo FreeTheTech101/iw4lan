@@ -35,8 +35,10 @@ solution "iw4lan"
 
 		pchsource "steam_api/StdInc.cpp"
 		pchheader "StdInc.h"
-		
-		includedirs { "deps/include/osw/", "deps/include/python/", "deps/include/cef/" }
+
+		libdirs { "libcef/lib/" }
+
+		includedirs { "deps/include/osw/", "deps/include/python/", "libcef/" }
 
 		links
 		{
@@ -87,4 +89,24 @@ solution "iw4lan"
 			"System.Data",
 			"System.Xml",
 			"Microsoft.CSharp"
+		}
+		
+	project "libcef_dll_wrapper"
+		targetname "libcef_dll_wrapper"
+		language "C++"
+		kind "StaticLib"
+
+		defines { "USING_CEF_SHARED", "NOMINMAX", "WIN32" }
+
+		flags { "NoIncrementalLink", "NoMinimalRebuild" }
+
+		includedirs { "libcef/" }
+
+		buildoptions "/MP"
+
+		files
+		{
+			"libcef/libcef_dll/**.cc",
+			"libcef/libcef_dll/**.cpp",
+			"libcef/libcef_dll/**.h"
 		}
