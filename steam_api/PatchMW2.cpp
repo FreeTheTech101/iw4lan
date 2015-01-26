@@ -261,7 +261,6 @@ void PatchMW2_159()
 	PatchMW2_T6Clips();
 	InitScriptability();
 	PatchMW2_CryptoFiles();
-	PatchMW2_NUI();
 
 	bool nativeConsole = GAME_FLAG(GAME_FLAG_CONSOLE);
 
