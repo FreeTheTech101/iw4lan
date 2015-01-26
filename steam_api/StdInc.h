@@ -11,6 +11,8 @@
 
 #pragma once
 
+//#define WE_DO_WANT_NUI
+
 #include "buildnumber.h"
 
 #define VERSION BUILDNUMBER_STR

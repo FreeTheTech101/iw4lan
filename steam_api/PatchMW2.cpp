@@ -277,7 +277,9 @@ void PatchMW2_159()
 		PatchMW2_Loadscreens();
 		PatchMW2_MusicalTalent();
 		PatchMW2_OneThread();
+#ifdef WE_DO_WANT_NUI
 		PatchMW2_NUI();
+#endif
 	}
 
 	if (nativeConsole)
