@@ -121,6 +121,7 @@ void PatchMW2_Dvars();
 void PatchMW2_ClientCommands();
 void PatchMW2_Loadscreens();
 void PatchMW2_UIScripts();
+void PatchMW2_UILoading();
 void PatchMW2_SayCommands();
 void PatchMW2_XPBar();
 void PatchMW2_ClientDvar();
@@ -233,7 +234,8 @@ void PatchMW2_159()
 	PatchMW2_StringTable();
 	PatchMW2_DemoRecording();
 	PatchMW2_ScoreboardInfo();
-	//PatchMW2_UIScripts();
+	PatchMW2_UIScripts();
+	PatchMW2_UILoading();
 	PatchMW2_Script();
 	PatchMW2_FifthInfinity();
 	PatchMW2_CryptoFiles();
