@@ -644,7 +644,7 @@ menuDef_t* LoadScreens_MessWithConnectMenu(menuDef_t* menu);
 
 menuFile_t* uimp_code;
 
-#define NUM_CUSTOM_MENUS 1
+#define NUM_CUSTOM_MENUS 0
 
 void* MenuFileHookFunc(const char* filename)
 {
@@ -751,7 +751,7 @@ void* MenuFileHookFunc(const char* filename)
 
 	if (numCustomMenus)
 	{
-		CUSTOM_MENU("ui_mp/popup_friends.menu");
+		//CUSTOM_MENU("ui_mp/popup_friends.menu");
 	}
 
 	if (!replacedMenu)
