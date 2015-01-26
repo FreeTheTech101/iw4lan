@@ -82,14 +82,7 @@ solution "iw4lan"
 			"InfinityScript/**.cs"
 		}
 
-		links
-		{
-			"System",
-			"System.Core",
-			"System.Data",
-			"System.Xml",
-			"Microsoft.CSharp"
-		}
+		links { "System", "System.Core", "System.Data", "System.Xml" }
 		
 	project "libcef_dll_wrapper"
 		targetname "libcef_dll_wrapper"
