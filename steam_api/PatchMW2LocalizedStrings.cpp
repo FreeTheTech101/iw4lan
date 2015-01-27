@@ -47,6 +47,11 @@ void PatchMW2_LocalizedStrings()
 	_localizedStrings.set_empty_key("");
 
 	_localizedStrings["EXE_AWAITINGGAMESTATE"] = "Awaiting gamestate";
+	_localizedStrings["MPUI_NUKED"] = "Nuketown";
+	_localizedStrings["MPUI_BOG_SH"] = "Bog";
+	_localizedStrings["WEAPON_PEACEKEEPER"] = "Peacekeeper SMG";
+	_localizedStrings["MENU_RECONNECTING_TO_PARTY"] = "CONNECTING TO SERVER";
+
 	/*
 	_localizedStrings["MENU_INVITE_CAPS"] = "Store";
 	_localizedStrings["MPUI_DESC_PARTY_INVITE"] = "DLC store.";

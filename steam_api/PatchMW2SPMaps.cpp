@@ -260,7 +260,24 @@ void MapZoneLoadHookFunc(XZoneInfo* data, int count, int unknown)
 				dlcname = "Nuketown";
 			}
 
-			Com_Error(2, "You do not seem to have the map '%s'.\nDownload the %s DLC from the Store in the Main Menu.", data[0].name, dlcname);
+			if (!_stricmp(data[0].name, "mp_cross_fire") || !_stricmp(data[0].name, "mp_cargoship") || !_stricmp(data[0].name, "mp_bloc"))
+			{
+				dlcname = "Classics #1";
+			}
+
+			if (!_stricmp(data[0].name, "mp_complex") || !_stricmp(data[0].name, "mp_compact") || !_stricmp(data[0].name, "mp_storm") || !_stricmp(data[0].name, "mp_overgrown") || !_stricmp(data[0].name, "mp_crash"))
+			{
+				dlcname = "Stimulus";
+			}
+
+			if (!_stricmp(data[0].name, "mp_abandon") || !_stricmp(data[0].name, "mp_vacant") || !_stricmp(data[0].name, "mp_trailerpark") || !_stricmp(data[0].name, "mp_strike") || !_stricmp(data[0].name, "mp_fuel2"))
+			{
+				dlcname = "Resurgence";
+			}
+
+			Com_Error(1, "You do not seem to have the map '%s'.\nDownload the %s DLC from the Store in the Main Menu.", data[0].name, dlcname);
+
+			return;
 		}
 	}
 
@@ -326,7 +343,7 @@ void GetBSPNameHookFunc(char* buffer, size_t size, const char* format, const cha
 	_snprintf(buffer, size, format, mapname);
 
 	// check for being MP/SP, and change data accordingly
-	if (_strnicmp("mp_", mapname, 3) || !_stricmp(mapname, "mp_nuked") || !_stricmp(mapname, "mp_cross_fire") || !_stricmp(mapname, "mp_cargoship")) // TODO: fix the hardcoded nuked reference
+	if (_strnicmp("mp_", mapname, 3) || !_stricmp(mapname, "mp_nuked") || !_stricmp(mapname, "mp_cross_fire") || !_stricmp(mapname, "mp_cargoship") || !_stricmp(mapname, "mp_killhouse") || !_stricmp(mapname, "mp_bog_sh") || !_stricmp(mapname, "mp_bloc") || !_stricmp(mapname, "mp_fav_tropical")) // TODO: fix the hardcoded nuked reference
 	{
 		// SP
 		*(DWORD*)0x4D90B7 = gameWorldSP + 52;		// some game data structure
@@ -354,9 +371,27 @@ void AssetRestrict_PreLoadFromMaps(assetType_t type, void* entry, const char* zo
 CallHook ignoreEntityHook;
 DWORD ignoreEntityHookLoc = 0x5FBD6E;
 
-bool IgnoreEntityHookFunc(const char* entity); // TODO: move here from Load
+static void* materialArray;
+
+void mdump_f()
+{
+	Material** ma = (Material**)materialArray;
+
+	for (int i = 0; i < 8192; i++)
+	{
+		if (ma[i])
+		{
+			Com_Printf(0, "%i: %s\n", i, ma[i]->name);
+		}
+	}
+}
+
+bool IgnoreEntityHookFunc(const char* entity)
+{
+	return (!strncmp(entity, "dyn_", 4) || !strncmp(entity, "node_", 5) || !strncmp(entity, "actor_", 6)/* || !strncmp(entity, "weapon_", 7)*/);
+}
+
 void ReallocXAssetEntries();
-void PatchMW2_Uncoupling();
 
 void PatchMW2_SPMaps()
 {
@@ -371,7 +406,8 @@ void PatchMW2_SPMaps()
 	ReallocateAssetPool(ASSET_TYPE_FX, 1200);
 	ReallocateAssetPool(ASSET_TYPE_LOCALIZE, 14000);
 	ReallocateAssetPool(ASSET_TYPE_XANIM, 8192);
-	ReallocateAssetPool(ASSET_TYPE_XMODEL, 3072);
+	//ReallocateAssetPool(ASSET_TYPE_XMODEL, 3072);
+	ReallocateAssetPool(ASSET_TYPE_XMODEL, 5125);
 	ReallocateAssetPool(ASSET_TYPE_PHYSPRESET, 128);
 	ReallocateAssetPool(ASSET_TYPE_PIXELSHADER, 10000);
 	//ReallocateAssetPool(ASSET_TYPE_ADDON_MAP_ENTS, 128);
@@ -379,6 +415,27 @@ void PatchMW2_SPMaps()
 	//ReallocateAssetPool(ASSET_TYPE_TECHSET, 1024);
 	//ReallocateAssetPool(ASSET_TYPE_MATERIAL, 8192);
 	ReallocateAssetPool(ASSET_TYPE_VERTEXDECL, 196);
+
+	// resize material pool things
+	materialArray = malloc(4 * (8192 + 512));
+	void* materialByteArray = malloc(8192);
+
+	*(DWORD*)0x507AB2 = (4 * (8192 + 512));
+
+	int matArrayPatches[] = { 0x66DAD80 };
+	SearchAndPatch(matArrayPatches, 1, 0x66DAD80, (DWORD)materialArray);
+
+	int matArrayPatches2[] = { 0x6D80480 };
+	SearchAndPatch(matArrayPatches2, 1, 0x6D80480, (DWORD)materialByteArray);
+
+	// some material count equivalent
+	*(WORD*)0x5239F8 = 8192;
+	*(DWORD*)0x50EA20 = 8192;
+	*(DWORD*)0x50EB65 = 8192;
+	*(DWORD*)0x5284E8 = 8192;
+
+	static cmd_function_s mdump;
+	Cmd_AddCommand("materialSList", mdump_f, &mdump, 0);
 
 	// get and store GameWorld*p data
 	gameWorldSP = (DWORD)ReallocateAssetPool(ASSET_TYPE_GAME_MAP_SP, 1);

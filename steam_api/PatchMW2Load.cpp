@@ -18,6 +18,9 @@ void __cdecl UILoadHook1(XZoneInfo* data, int count, int unknown) {
 	newData[1].name = "dlc2_ui_mp";
 	newData[1].type1 = 3;
 	newData[1].type2 = 0;
+	/*newData[2].name = "ui_viewer_mp";
+	newData[2].type1 = 4;
+	newData[2].type2 = 0;*/
 
 	return DB_LoadXAssets(newData, 2, unknown);
 }
@@ -27,9 +30,9 @@ void __declspec(naked) UILoadHook1Stub() {
 }
 
 void __cdecl FFLoadHook1(XZoneInfo* data, int count, int unknown) {
-	int newCount = count + 2;
+	int newCount = count + 3;
 
-	static XZoneInfo newData[20];
+	XZoneInfo newData[20];
 	memcpy(&newData[0], data, sizeof(XZoneInfo) * count);
 	newData[0].type1 = 1;
 	newData[1].type1 = 1;
@@ -39,7 +42,18 @@ void __cdecl FFLoadHook1(XZoneInfo* data, int count, int unknown) {
 	newData[count + 1].name = "dlc2_ui_mp";
 	newData[count + 1].type1 = 2;
 	newData[count + 1].type2 = 0;
-
+	newData[count + 2].name = "weap_trey";
+	newData[count + 2].type1 = newData[2].type1;
+	newData[count + 2].type2 = newData[2].type2;
+	/*newData[count + 3].name = newData[3].name;
+	newData[count + 3].type1 = newData[3].type1;
+	newData[count + 3].type2 = newData[3].type2;
+	newData[2].name = "iw4_wc_shaders_min";
+	newData[2].type1 = newData[2].type1;
+	newData[2].type2 = 0;
+	newData[3].name = "ui_viewer_mp";
+	newData[3].type1 = 4;
+	newData[3].type2 = 0;*/
 	return DB_LoadXAssets(newData, newCount, unknown);
 }
 
@@ -77,7 +91,6 @@ DWORD zoneLoadHook2Loc = 0x4CCE08;
 char zone_language[MAX_PATH];
 char* loadedPath = "";
 char* zonePath = "";
-
 
 dvar_t** fs_basepath = (dvar_t**)0x63D0CD4;
 dvar_t** fs_cdpath = (dvar_t**)0x63D0BB0;
@@ -276,8 +289,6 @@ void ZoneSprintfHookFunc(char* buffer, int length, const char* format, const cha
 	_snprintf(buffer, length, "%s%s", zonePath, zoneName);
 }
 
-bool IgnoreEntityHookFunc(const char* entity);
-
 void ReallocEntries();
 
 typedef int (__cdecl * DB_GetXAssetSizeHandler_t)();
@@ -366,9 +377,4 @@ void PatchMW2_Load()
 
 	zoneSprintfHook.initialize(zoneSprintfHookLoc, ZoneSprintfHookFunc);
 	zoneSprintfHook.installHook();
-}
-
-bool IgnoreEntityHookFunc(const char* entity)
-{
-	return (!strncmp(entity, "dyn_", 4) || !strncmp(entity, "node_", 5) || !strncmp(entity, "actor_", 6)/* || !strncmp(entity, "weapon_", 7)*/);
 }

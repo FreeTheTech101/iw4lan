@@ -143,6 +143,7 @@ void PatchMW2_T6Clips();
 void InitScriptability();
 void PatchMW2_CryptoFiles();
 void PatchMW2_NUI();
+void PatchMW2_ScriptSafe();
 
 void PatchMW2_159()
 {
@@ -263,6 +264,7 @@ void PatchMW2_159()
 	PatchMW2_T6Clips();
 	InitScriptability();
 	PatchMW2_CryptoFiles();
+	PatchMW2_ScriptSafe();
 
 	bool nativeConsole = GAME_FLAG(GAME_FLAG_CONSOLE);
 
