@@ -30,6 +30,12 @@ DB_GetXAssetNameHandler_t* DB_GetXAssetNameHandlers = (DB_GetXAssetNameHandler_t
 char CanWeLoadAsset(assetType_t type, void* entry)
 {
 	const char* name = DB_GetXAssetNameHandlers[type](entry);
+
+	if (!name)
+	{
+		return 2;
+	}
+
 	if (type == ASSET_TYPE_WEAPON)
 	{
 		// somewhat-workaround for issue 'could not load weapon "destructible_car"' and cars not doing any damage
@@ -46,7 +52,6 @@ char CanWeLoadAsset(assetType_t type, void* entry)
 
 	if (AssetRestrict_RestrictFromMaps(type, name, CURRENT_ZONE_NAME))
 	{
-		//deadAssets[*(DWORD*)entry] = true;
 		return 2;
 	}
 
