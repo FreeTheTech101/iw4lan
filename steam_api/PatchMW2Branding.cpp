@@ -56,7 +56,7 @@ void DrawBranding()
 
 		if (CL_IsCgameInitialized())
 		{
-			color[3] = 0.3f;
+			color[3] = 0.5f;
 		}
 
 		R_AddCmdDrawText("IW4LAN", 0x7FFFFFFF, font, width(10, textWidth), 30, font_size, font_size, 0.0f, color, 0);
@@ -104,7 +104,7 @@ void PatchMW2_Branding()
 	*(DWORD**)0x5076AC = &wcGEx;
 
 	// displayed build tag in UI code
-	*(DWORD*)0x43F73B = (DWORD)VERSIONSTRING;
+	*(DWORD*)0x43F73B = (DWORD)"";
 
 	// console '%s: %s> ' string
 	*(DWORD*)0x5A44B4 = (DWORD)(VERSIONSTRING "> ");
