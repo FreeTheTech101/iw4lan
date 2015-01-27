@@ -16,7 +16,9 @@
 static std::unordered_map<DWORD, bool> deadAssets;
 
 // TODO: provide generic hooking for these calls
-//void AssetRestrict_PreLoadFromExperimental(assetType_t type, void* entry, const char* zone);
+bool AssetRestrict_RestrictFromMaps(assetType_t type, const char* name, const char* zone);
+void AssetRestrict_PreLoadFromMaps(assetType_t type, void* entry, const char* zone);
+void AssetRestrict_PreLoadFromExperimental(assetType_t type, void* entry, const char* zone);
 
 StompHook dbAddXAssetHook;
 DWORD dbAddXAssetHookLoc = 0x5BB650;
@@ -28,12 +30,6 @@ DB_GetXAssetNameHandler_t* DB_GetXAssetNameHandlers = (DB_GetXAssetNameHandler_t
 char CanWeLoadAsset(assetType_t type, void* entry)
 {
 	const char* name = DB_GetXAssetNameHandlers[type](entry);
-
-	if (!name)
-	{
-		return 2;
-	}
-
 	if (type == ASSET_TYPE_WEAPON)
 	{
 		// somewhat-workaround for issue 'could not load weapon "destructible_car"' and cars not doing any damage
@@ -48,6 +44,12 @@ char CanWeLoadAsset(assetType_t type, void* entry)
 		}
 	}
 
+	if (AssetRestrict_RestrictFromMaps(type, name, CURRENT_ZONE_NAME))
+	{
+		//deadAssets[*(DWORD*)entry] = true;
+		return 2;
+	}
+
 	return 1;
 }
 
@@ -55,7 +57,8 @@ void DoBeforeLoadAsset(assetType_t type, void** entry)
 {
 	if (entry)
 	{
-		//AssetRestrict_PreLoadFromExperimental(type, *entry, CURRENT_ZONE_NAME);
+		AssetRestrict_PreLoadFromMaps(type, *entry, CURRENT_ZONE_NAME);
+		AssetRestrict_PreLoadFromExperimental(type, *entry, CURRENT_ZONE_NAME);
 	}
 }
 
@@ -160,9 +163,6 @@ returnFalse:
 }
 #endif
 
-// defined in Load.cpp
-void* ReallocateAssetPool(assetType_t type, unsigned int newSize);
-
 void PatchMW2_AssetRestrict()
 {
 	dbAddXAssetHook.initialize(dbAddXAssetHookLoc, DB_AddXAssetHookStub, 7);
@@ -170,21 +170,4 @@ void PatchMW2_AssetRestrict()
 
 	//markAssetHook.initialize(markAssetHookLoc, MarkAssetHookStub);
 	//markAssetHook.installHook();
-	
-	// reallocate asset pools
-	ReallocateAssetPool(ASSET_TYPE_IMAGE, 7168);
-	ReallocateAssetPool(ASSET_TYPE_LOADED_SOUND, 2700);
-	ReallocateAssetPool(ASSET_TYPE_FX, 1200);
-	ReallocateAssetPool(ASSET_TYPE_LOCALIZE, 14000);
-	ReallocateAssetPool(ASSET_TYPE_XANIM, 8192);
-	//ReallocateAssetPool(ASSET_TYPE_XMODEL, 3072);
-	ReallocateAssetPool(ASSET_TYPE_XMODEL, 8125);
-	ReallocateAssetPool(ASSET_TYPE_PHYSPRESET, 128);
-	ReallocateAssetPool(ASSET_TYPE_PIXELSHADER, 10000);
-	//ReallocateAssetPool(ASSET_TYPE_ADDON_MAP_ENTS, 128);
-	ReallocateAssetPool(ASSET_TYPE_VERTEXSHADER, 3072);
-	ReallocateAssetPool(ASSET_TYPE_TECHSET, 1024);
-	ReallocateAssetPool(ASSET_TYPE_MATERIAL, 8192);
-	ReallocateAssetPool(ASSET_TYPE_VERTEXDECL, 196);
-	ReallocateAssetPool(ASSET_TYPE_STRINGTABLE, 1600);
 }

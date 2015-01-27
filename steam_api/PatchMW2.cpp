@@ -98,6 +98,8 @@ void PatchMW2_Hello();
 void PatchMW2_Client();
 void PatchMW2_Prefix();
 void PatchMW2_AssetRestrict();
+void PatchMW2_SPMaps();
+void PatchMW2_Experimental();
 void PatchMW2_ClientConsole();
 void PatchMW2_NoBorder();
 void PatchMW2_LogInitGame();
@@ -211,10 +213,6 @@ void PatchMW2_159()
 	// always call _fpmath callback
 	*(WORD*)0x6B8B9F = 0x9090;
 
-	// allow loading of IWffu (unsigned) files
-	*(BYTE*)0x4158D9 = 0xEB; // main function
-	*(WORD*)0x4A1D97 = 0x9090; // DB_AuthLoad_InflateInit
-
 	// more detailed patches
 	PatchMW2_FFHash();
 	PatchMW2_Modding();
@@ -226,6 +224,8 @@ void PatchMW2_159()
 	PatchMW2_Load();
 	PatchMW2_Hello();
 	PatchMW2_AssetRestrict();
+	PatchMW2_SPMaps();
+	PatchMW2_Experimental();
 	PatchMW2_Materialism();
 	PatchMW2_Branding();
 	PatchMW2_ScriptCompileDebug();
