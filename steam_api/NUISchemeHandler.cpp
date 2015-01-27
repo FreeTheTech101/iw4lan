@@ -12,9 +12,6 @@
 #include "StdInc.h"
 #include "NUI.h"
 
-#define MINIZ_HEADER_FILE_ONLY
-#include "miniz.c"
-
 FS_FOpenFileRead_t FS_FOpenFileReadTc = (FS_FOpenFileRead_t)0x643270;
 
 typedef bool (__cdecl * Sys_IsDatabaseReady_t)();
