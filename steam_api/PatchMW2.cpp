@@ -241,8 +241,6 @@ void PatchMW2_159()
 	PatchMW2_UIScripts();
 	PatchMW2_UILoading();
 	PatchMW2_Script();
-	PatchMW2_FifthInfinity();
-	PatchMW2_CryptoFiles();
 	PatchMW2_SuicideMessages();
 	PatchMW2_Dvars();
 	PatchMW2_ClientCommands();
