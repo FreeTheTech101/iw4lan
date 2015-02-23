@@ -1,7 +1,7 @@
 version: 1.0.{build}
 configuration: Release
 install:
-  - ps: (new-object net.webclient).DownloadFile('http://tohjo.eu/ntauthority/budgeted/blob/master/premake5.exe', 'premake5.exe')
+  - ps: (new-object net.webclient).DownloadFile('http://tohjo.eu/ntauthority/budgeted/raw/master/premake5.exe', 'premake5.exe')
 before_build:
   - ps: premake5.exe vs2013
 build:
