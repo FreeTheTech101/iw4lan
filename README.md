@@ -1,5 +1,7 @@
 # IW4LAN
 
+[![Build status](https://ci.appveyor.com/api/projects/status/qfcle1nxvwmpbq9i?svg=true)](https://ci.appveyor.com/project/win32re/iw4lan)
+
 Open source IW4 modification project which brings an offline mode to the game.
 
 ## Build instructions
