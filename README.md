@@ -1,3 +1,3 @@
 # IW4LAN
 
-Issue tracker and documentation for the IW4LAN project.
+Open source IW4 modification for playing the game without internet access.
