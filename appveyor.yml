@@ -1,14 +1,9 @@
 version: 1.0.{build}
 configuration: Release
+install:
+  - ps: (new-object net.webclient).DownloadFile('http://tohjo.eu/ntauthority/budgeted/blob/master/premake5.exe', 'premake5.exe')
 before_build:
-- ps: >-
-    Invoke-WebRequest -Uri http://downloads.sourceforge.net/project/premake/Premake/nightlies/premake-dev-windows.zip?r=&ts=1424704634&use_mirror=cznic -OutFile premake-dev-windows.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::FireFox
-
-    Add-Type -A System.IO.Compression.FileSystem
-
-    [IO.Compression.ZipFile]::ExtractToDirectory('premake-dev-windows.zip', $MyInvocation.MyCommand.Path)
-
-    premake5 vs2013
+  - ps: premake5.exe vs2013
 build:
   project: iw4cli.sln
   verbosity: minimal
