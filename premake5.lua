@@ -1,4 +1,4 @@
-solution "iw4lan"
+solution "iw4cli"
 	configurations { "Debug", "Release" }
 	
 	flags { "StaticRuntime", "No64BitChecks", "Symbols", "Unicode" }
