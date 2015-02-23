@@ -4,6 +4,8 @@ Open source IW4 modification project which brings an offline mode to the game.
 
 ## Build instructions
 
+> Building with Visual Studio versions older than Visual Studio 2013 is not supported.
+
 ### Requirements
 
 * Git
