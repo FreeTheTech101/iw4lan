@@ -145,7 +145,6 @@ DWORD getBSPNameHookLoc = 0x4C5979;
 static char levelDependencyName[64];
 static char levelAssetName[64];
 
-extern std::unordered_map<std::string, bool> _allowedAssetMap;
 extern bool ignoreThisFx;
 
 bool AssetRestrict_RestrictFromMaps(assetType_t type, const char* name, const char* zone)

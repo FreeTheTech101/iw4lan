@@ -1067,15 +1067,6 @@ void AssetRestrict_PreLoadFromExperimental(assetType_t type, void* entry, const 
 }
 
 extern const char* allowedImagery[];
-std::unordered_map<std::string, bool> _allowedAssetMap;
-
-void InitializeImageLoad()
-{
-	for (const char** imageName = allowedImagery; *imageName != NULL; imageName++)
-	{
-		_allowedAssetMap[*imageName] = true;
-	}
-}
 
 char lastZoneName[256];
 
@@ -1107,9 +1098,12 @@ bool CanWeLoadThisImage()
 		return true;
 	}
 
-	if (_allowedAssetMap.find(image->name) == _allowedAssetMap.end())
+	for (const char** imageName = allowedImagery; *imageName != NULL; imageName++)
 	{
-		return true;
+		if (!strcmp(*imageName, image->name))
+		{
+			return true;
+		}
 	}
 
 	return false;
@@ -1642,8 +1636,6 @@ void PatchMW2_Experimental()
 
 	modelOverflowHook.initialize(modelOverflowHookLoc, ModelOverflowHookStub);
 	modelOverflowHook.installHook();
-
-	InitializeImageLoad();
 
 	loadTextureHook.initialize(loadTextureHookLoc, Load_TextureHookStub);
 	loadTextureHook.installHook();
