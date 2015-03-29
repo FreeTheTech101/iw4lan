@@ -54,7 +54,7 @@ void SELoadLanguageHookStub()
 	char** enumList = *(char***)&(modLang->max); //not sure if this is really dvar_maxmin_t max.
 	char* language = enumList[modLang->current.integer];
 
-	//'official' iw4m localized strings
+	//'official' iw4lan localized strings
 	isIW4LanStrings = true;
 	SE_Load("localizedstrings/iw4lan.str", 0);
 	isIW4LanStrings = false;
