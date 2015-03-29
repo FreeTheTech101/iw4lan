@@ -53,49 +53,10 @@ int CreateWeaponDObjHookFunc(DObjModel_t* models, int count, int a3, int a4)
 	DObjModel_t newModels[16];
 	memcpy(newModels, models, sizeof(DObjModel_t) * count);
 
-	if (!strcmp(*(bg_weaponNames[weaponDef]), "m16_shotgun_xmags_mp"))
+	if (!strcmp(*(bg_weaponNames[weaponDef]), "peacekeeper_"))
 	{
 		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "t6_attach_mag_peacekeeper_view");
 		newModels[count].attachTag = thisTag;//*(short*)0x1AA2EC2; // tag_clip
-		newModels[count].someFlag = 0;
-
-		count++;
-	}
-
-	if (!strcmp(*(bg_weaponNames[weaponDef]), "hi_mp") || !strcmp(*(bg_weaponNames[weaponDef]), "*hi_mp_banana"))
-	{
-		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "muz_flashhiderarstrike_ssncm_blk_vmgun");
-		newModels[count].attachTag = thisTag2;//*(short*)0x1AA2EC2; // tag_clip
-		newModels[count].someFlag = 0;
-
-		count++;
-
-		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "mag_default_ak104ncm_blk_vmgun");
-		newModels[count].attachTag = thisTag;//*(short*)0x1AA2EC2; // tag_clip
-		newModels[count].someFlag = 0;
-
-		count++;
-
-		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "eot_553_ss_11_vmgun");
-		newModels[count].attachTag = thisTag3;//*(short*)0x1AA2EC2; // tag_clip
-		newModels[count].someFlag = 0;
-
-		count++;
-
-		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "sto_ar15emod_ss_08_vmgun");
-		newModels[count].attachTag = thisTag4;//*(short*)0x1AA2EC2; // tag_clip
-		newModels[count].someFlag = 0;
-
-		count++;
-
-		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "gri_default_ak104ncm_blk_vmgun");
-		newModels[count].attachTag = thisTag5;//*(short*)0x1AA2EC2; // tag_clip
-		newModels[count].someFlag = 0;
-
-		count++;
-
-		newModels[count].model = (XModel*)DB_FindXAssetHeader(ASSET_TYPE_XMODEL, "rai_default_ak104_05_vmgun");
-		newModels[count].attachTag = thisTag6;//*(short*)0x1AA2EC2; // tag_clip
 		newModels[count].someFlag = 0;
 
 		count++;
