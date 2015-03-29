@@ -137,7 +137,6 @@ void PatchMW2_Maxclients();
 void PatchMW2_RecordingSV();
 void PatchMW2_FrameTime();
 void PatchMW2_FrameRate();
-
 void PatchMW2_FifthInfinity();
 void PatchMW2_T6Clips();
 void InitScriptability();
@@ -209,7 +208,7 @@ void PatchMW2_159()
 	// https://github.com/momo5502/iw4-test/blob/master/iw4-test/Main.cpp#L334
 	*(DWORD*)0x79D898 = 1;
 
-	*(const char**)0x51F5A6 = "Could not load image '%s'. If this image name starts with 'preview_mp_', you might be missing iw_22.iwd/iw_23.iwd. Read the relevant FAQ entry on http://fourdeltaone.net/#/support :)";
+	*(const char**)0x51F5A6 = "Could not load image '%s'. If this image name starts with 'preview_mp_', you might be missing iw_22.iwd/iw_23.iwd.";
 
 	// always call _fpmath callback
 	*(WORD*)0x6B8B9F = 0x9090;
