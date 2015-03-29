@@ -76,9 +76,9 @@ LevelDependency _dependencies[] =
 	{ "gulag", "mp_subbase" },
 	{ "contingency", "mp_subbase" },
 	{ "so_ghillies", "mp_brecourt" },
-	{ "roadkill", "mp_afghan" }, // actually Rust is vs. TF 141 and not vs. Army Rangers, but meh.
-	{ "favela", "mp_favela" }, // originally said 'takedown', don't know who the fsck came up with this
-	{ "so_bridge", "mp_storm" }, // other map dependency requests, PM me on fourdeltaone.net :)
+	{ "roadkill", "mp_invasion" }, 
+	{ "favela", "mp_favela" },
+	{ "so_bridge", "mp_storm" }, 
 	{ "iw4_credits", "team_opforce_composite" },
 	{ "iw4_credits", "team_us_army" },
 	{ "trainer", "mp_rust" },
