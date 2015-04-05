@@ -1127,3 +1127,11 @@ struct snapshot_s
    clientState_s clients[MAX_CLIENTS];
    int serverCommandSequence;
 };
+
+struct newMapArena_t
+{
+	char uiName[32];
+	char oldMapName[16];
+	char other[2768];
+	char mapName[32];
+};
