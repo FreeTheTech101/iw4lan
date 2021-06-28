@@ -1,9 +1,14 @@
 solution "iw4cli"
 	configurations { "Debug", "Release" }
 	
-	flags { "StaticRuntime", "No64BitChecks", "Symbols", "Unicode" }
+	flags { "No64BitChecks" }
+
+	staticruntime "On"
+	symbols "On"
 	
-	flags { "NoIncrementalLink", "NoEditAndContinue" }
+	flags { "NoIncrementalLink" }
+	
+	editandcontinue "Off"
 
 	includedirs { "deps/include/" }
 		
