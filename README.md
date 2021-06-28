@@ -20,17 +20,13 @@ git clone https://github.com/twizre/iw4lan.git
 cd iw4lan
 ```
 
-### Set up Premake
-
-1. Download the latest Premake nightly build from [here](http://www.mirrorservice.org/sites/ftp.sourceforge.net/pub/sourceforge/p/pr/premake/Premake/nightlies/premake-dev-windows.zip).
-2. Extract `premake5.exe` to the directory you cloned this repository to.
-
 ### Generate project files
 
 ```
-cd iw4lan
+cd iw4lan\deps\tools\
 premake5 vs2013
 ```
+Or use `createSLN.bat`.
 
 ### Build the project
 
