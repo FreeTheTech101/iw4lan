@@ -23,7 +23,7 @@ cd iw4lan
 ### Generate project files
 
 ```
-cd iw4lan\deps\tools\
+cd iw4lan\deps\tools
 premake5 vs2013
 ```
 Or use `createSLN.bat`.
